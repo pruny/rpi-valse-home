@@ -1,0 +1,20 @@
+#!/bin/bash
+
+
+/usr/bin/poff modem
+wait
+/bin/sleep 1
+/bin/rm /var/www/TMPFS/GSM/PPP
+/bin/sleep 1
+/bin/systemctl start gammu-smsd.service
+/bin/sleep 1
+
+
+<<"COMMENT"
+/usr/bin/poff modem &&
+/bin/sleep 1 &&
+/bin/rm /var/www/TMPFS/GSM/PPP &&
+/bin/sleep 1 &&
+/bin/systemctl start gammu-smsd.service &&
+/bin/sleep 1
+COMMENT

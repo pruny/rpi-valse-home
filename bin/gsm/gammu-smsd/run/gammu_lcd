@@ -1,0 +1,36 @@
+#!/usr/bin/python
+
+import sys
+import os
+import time
+import lcddriver
+
+lcd_address = "0x3f"
+lcd = lcddriver.lcd(lcd_address)
+
+def display(msg1, msg2="                "):
+
+  ### verificare daca nu exista LCD, iesi din aceasta functie si treci mai departe
+    for i2c_address in lcd_address:
+
+      lcd_status = subprocess.check_output(["/home/pi/emonpi/lcd/emonPiLCD_detect.sh", "%s" % i2c_address])
+
+      if lcd_status.rstrip() == 'True':
+        print "I2C LCD DETECTED Ox%s" % i2c_address
+
+      if lcd_status.rstrip() == 'False':
+        print ("I2C LCD NOT DETECTED on either 0x" + str(lcd_i2c) + " ...exiting LCD script")
+        break
+
+lcd.lcd_clear()
+lcd.backlight = 1
+lcd.lcd_display_string("  SMS command  ", 1)
+lcd.lcd_display_string("  received !!  ", 2)
+time.sleep(3)
+lcd.lcd_clear()
+time.sleep(0.2)
+lcd.lcd_display_string(msg1, 1)
+lcd.lcd_display_string(msg2, 2)
+time.sleep(5)
+lcd.lcd_clear()
+lcd.backlight = 0

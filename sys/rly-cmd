@@ -1,0 +1,32 @@
+#!/usr/bin/python
+
+import os
+import socket
+import sys
+
+if __name__ == "__main__":
+  import sys
+  if len(sys.argv) != 8:
+    print "ERROR: Usage >>> [rly-cmd] [val1] [val2] [val3] [val4 ] val5] val6] [val7] [val8]"
+    exit()
+
+addr = "192.168.1.123"
+port = 2000
+buffer = 128
+
+try:
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.connect((addr, port))
+	#cmd = '{"relay1":"on","relay2":"on","relay3":"off","relay4":"on","relay5":"on","relay6":"on","relay7":"off","relay8":"on"}'
+	s.send(cmd)
+	answ = s.recv(buffer)
+	s.close()
+# daca nu exista conexiune la RLY printeaza mesaj predefinit de eroare
+except Exception as e:
+	print '>>> RLY-8 module is not available! <<<'
+	print '{"relay1":"n/a","relay2":"n/a","relay3":"n/a","relay4":"n/a","relay5":"n/a","relay6":"n/a","relay7":"n/a","relay8":"n/a"}'
+	sys.exit(1)
+
+print answ
+  
+

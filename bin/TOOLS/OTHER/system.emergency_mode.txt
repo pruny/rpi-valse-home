@@ -1,0 +1,39 @@
+#########################################################################################
+### when during boot process Linux enters in emergency mode and the boot hangs
+### the computer had already connected to DHCP, but no network services have started yet
+### and need to press ctrl+D to continue...
+#########################################################################################
+
+### 1 ###
+# daca partitia radacina are fisiere corupte, sistemul booteaza in "emergency mode" si trebuie tastat ctrl+D ca sa continue procesul de bootare
+# se opreste sistemul
+# se extrage microSD cardul sau stickul usb, dupa caz
+# acestea se introduc pe un alt sistem linux (eventual folosind un adaptor microSD-usb)
+# se executa comanda urmatoare, in functie de cum este detectat portul folosit (X)
+
+	e2fsck -f -y -v -C 0 /dev/sdX1
+
+# se repara astfel structura partitiei (similar checkdisk din windows)
+# gata, reintrodu in vechiul sistem si booteaza
+
+	SAU
+
+### 2 ###
+# daca rulezi pe stick usb
+# booteaza pe vechiul sistem de operare aflat inca - daca mai e :-) pe microSD card
+# se executa comanda urmatoare, in functie de cum este detectat portul folosit (a)
+
+	e2fsck -f -y -v -C 0 /dev/sda1
+
+# se repara astfel structura partitiei
+# gata, fa modificarile necesare ca sa rulezi pe stickul usb si booteaza
+
+###################################
+### VARIANTA 1 ESTE DE PREFERAT ###
+###################################
+
+### OBS ###
+# comanda urmatoare repara structura partitiei 2 de pe microSD cardul aflat in sistem (partitie nefolosita, nemontata)
+
+	e2fsck -f -y -v -C 0 /dev/mmcblk0p2
+

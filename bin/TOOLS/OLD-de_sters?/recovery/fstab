@@ -1,0 +1,37 @@
+proc            /proc           proc    defaults          0       0
+/dev/mmcblk0p1  /boot           vfat    defaults          0       2
+/dev/disk/by-uuid/d4b2349b-3e07-4199-aca4-d7fbc5af894d  /               ext4    defaults,noatime  0       1
+#/dev/mmcblk0p2  /               ext4    defaults,noatime  0       1
+#
+# set 3 MB RAM disk for tempoorary data used on site: temperatures, graphs, ...
+tmpfs /var/www/files/data/TMPFS tmpfs defaults,noatime,nosuid,mode=0755,size=3m 0 0
+#
+#set 1 MB RAM disk for tempoorary data used in various scripts
+tmpfs /root/bin/tmpfs tmpfs defaults,noatime,nosuid,mode=0755,size=1m 0 0
+#
+# set RAM disk for directories used by the linux system
+tmpfs /tmp              tmpfs   defaults,noatime,mode=1777 0       0
+tmpfs /var/log          tmpfs   defaults,noatime,mode=0755 0       0
+tmpfs /var/lock         tmpfs   defaults,noatime,mode=0755 0       0
+#
+# set a particular usb storage drive for samba -> run first: ls -l /dev/disk/by-uuid/
+UUID=FEF5-264F  /media/usb.drive vfat uid=1010,gid=1010,noatime 0 0
+#
+# set a network share on a windows computer for backup (works fine!)
+#//10.142.0.10/BKP@rPi/ /mnt/pc.share cifs defaults,rw,credentials=/etc/cifspasswd 0 0
+#
+# previous version used to mount the same share on NAS (works fine!)
+#//10.142.0.100/rPi/ /mnt/nas.rPi cifs defaults,rw,credentials=/etc/cifspasswd 0 0
+#
+# set a network share on NAS for backup (NAS is a device that requires network access)
+# "-netdev" used to prevent to mount these share until the network has been enabled
+# "guest" for no password required
+#//10.142.0.100/rPi/ /mnt/nas.rPi cifs sec=ntlmv2,guest,_netdev 0 0
+#
+# set a particular usb stick - change appropriate uuid
+#UUID=FEF5-264F /media/usb.drive vfat rw,default 0 0
+#
+# set an usb stick
+#/dev/sda1 /media/usb.flash ntfs-3g rw,default 0 0
+#
+# a swapfile is not a swap partition, so no using swapon|off from here on, use  dphys-swapfile swap[on|off]  for that

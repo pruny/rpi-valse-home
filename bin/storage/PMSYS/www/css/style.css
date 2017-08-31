@@ -1,0 +1,135 @@
+@import url('http://fonts.googleapis.com/css?family=Gravitas One');
+
+.preserve-3d {
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    overflow-x: none;
+    background-color: #ffffff;
+    font-family: Gravitas One, arial black;
+    font-size: 40px;
+    font-smooth: always;
+    -webkit-font-smoothing: antialiased;
+}
+
+
+.button_base {
+    margin: 0;
+    border: 0;
+    font-size: 55px;
+    position: center;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: 0px;
+    width: 980px;
+    height: 85px;
+    text-align: center;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-user-select: none;
+    cursor: default;
+}
+
+.button_base:hover {
+    cursor: pointer;
+}
+
+/* button_base b11_3d_jumpback */
+.b11_3d_jumpback {
+    perspective: 500px;
+    -webkit-perspective: 500px;
+    -moz-perspective: 500px;
+}
+
+.b11_3d_jumpback div {
+    color: #990000;
+    background-color: transparent;
+    border: transparent;
+    padding: 10px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.b11_3d_jumpback:hover div {
+    color: #ffffff;
+    background-color: #000000;
+    animation: b11_3d_jump 0.2s ease-out;
+    -webkit-animation: b11_3d_jump 0.2s ease-out;
+    -moz-animation: b11_3d_jump 0.2s ease-out;
+    animation-fill-mode: forwards;
+    -webkit-animation-fill-mode: forwards;
+    -moz-animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes b11_3d_jump {
+    from {
+        transform: translateZ(0px) rotateX(0deg);
+        -webkit-transform: translateZ(0px) rotateX(0deg);
+        -moz-transform: translateZ(0px) rotateX(0deg);
+        background-color: #ffffff;
+        color: #000000;
+    }
+    49.99% {
+        transform: translateZ(100px) rotateX(90deg);
+        -webkit-transform: translateZ(100px) rotateX(90deg);
+        -moz-transform: translateZ(100px) rotateX(90deg);
+        background-color: #808080;
+        color: #000000;
+    }
+    50.00% {
+        transform: translateZ(100px) rotateX(-90deg);
+        -webkit-transform: translateZ(100px) rotateX(-90deg);
+        -moz-transform: translateZ(100px) rotateX(-90deg);
+        background-color: #000000;
+        color: #808080;
+    }
+    to {
+        transform: translateZ(0px) rotateX(0deg);
+        -webkit-transform: translateZ(0px) rotateX(0deg);
+        -moz-transform: translateZ(0px) rotateX(0deg);
+        background-color: transparent;
+        color: #ffff00;
+    }
+}
+
+@-moz-keyframes b11_3d_jump {
+    from {
+        transform: translateZ(0px) rotateX(0deg);
+        -webkit-transform: translateZ(0px) rotateX(0deg);
+        -moz-transform: translateZ(0px) rotateX(0deg);
+        background-color: #ffffff;
+        color: #000000;
+    }
+    49.99% {
+        transform: translateZ(100px) rotateX(90deg);
+        -webkit-transform: translateZ(100px) rotateX(90deg);
+        -moz-transform: translateZ(100px) rotateX(90deg);
+        background-color: #808080;
+        color: #000000;
+    }
+    50.00% {
+        transform: translateZ(100px) rotateX(-90deg);
+        -webkit-transform: translateZ(100px) rotateX(-90deg);
+        -moz-transform: translateZ(100px) rotateX(-90deg);
+        background-color: #000000;
+        color: #808080;
+    }
+    to {
+        transform: translateZ(0px) rotateX(0deg);
+        -webkit-transform: translateZ(0px) rotateX(0deg);
+        -moz-transform: translateZ(0px) rotateX(0deg);
+        background-color: #000000;
+        color: #ffffff;
+    }
+}

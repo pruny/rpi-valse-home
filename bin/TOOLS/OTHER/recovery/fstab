@@ -1,0 +1,20 @@
+proc            /proc           proc    defaults          0       0
+/dev/mmcblk0p1  /boot           vfat    defaults          0       2
+/dev/disk/by-uuid/7f5202f9-bd9a-4dda-881a-9b18ca5d43d0  /               ext4    defaults,noatime  0       1
+#/dev/mmcblk0p2  /               ext4    defaults,noatime  0       1
+#
+# set 1 MB RAM disk for tempoorary data used on site: temperatures, graphs, ...
+#tmpfs /var/www/files/data/TMPFS tmpfs defaults,noatime,nosuid,mode=0755,size=1m,uid=33,gid=33 0 0
+#
+#set 1 MB RAM disk for tempoorary data used in various scripts
+#tmpfs /home/elephant/bin/tmpfs tmpfs   defaults,noatime,nosuid,mode=0755,size=1m 0 0
+#
+# set RAM disk for directories used by the linux system
+#tmpfs /tmp              tmpfs   defaults,noatime,mode=1777 0       0
+#tmpfs /var/log          tmpfs   defaults,noatime,mode=0755 0       0
+#tmpfs /var/lock         tmpfs   defaults,noatime,mode=0755 0       0
+#
+# set an specific usb drive - run first: ls -l /dev/disk/by-uuid/
+#UUID=36586EFA586EB86F /media/usb.drive ntfs uid=1000,gid=1000,umask=007 0 0
+#
+# a swapfile is not a swap partition, so no using swapon|off from here on, use  dphys-swapfile swap[on|off]  for that

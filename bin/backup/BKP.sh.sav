@@ -1,0 +1,153 @@
+#!/bin/bash
+
+# backup.sh save  the SD backup file in a network share
+
+# ===============================================================================
+# 1. >>> Setting up directories, Just change DIR varibales below to get going <<<
+# 2. >>>                      Setting Email recipients                        <<<
+# ===============================================================================
+
+DIR=/mnt/bkp-sd/
+HOSTNAME=`/bin/hostname`
+TOADDR1=ovidiu.constantin@gmx.com
+TOADDR2=ovidiu.constantin@kantarmedia.com
+
+tput setaf 6
+echo "                                                   "
+echo "==================================================="
+echo "                                                   "
+echo $HOSTNAME ">>>>" $(date '+%a %d %b %Y %H:%M:%S')
+echo "                                                   "
+echo "Starting RaspberryPI BACKUP process! Please wait..."
+echo "                                                   "
+echo "==================================================="
+tput setaf 7
+
+# First check if pv package is installed, if not, install it first
+echo "                                                            "
+echo "Check if package 'pv' is installed, if not, install it first"
+echo "                                                            "
+
+dpkg -s pv | grep Status
+PACKAGESTATUS=$?
+
+if [ $PACKAGESTATUS = 0 ]
+   then
+      echo "                                  "
+      echo "Package 'pv' is already installed."
+      echo "                                  "
+   else
+      echo "                                       "
+      echo "Package 'pv' is NOT installed."
+      echo "                                       "
+      echo "Installing package 'pv'. Please wait..."
+      echo "                                       "
+      apt-get -y install pv
+fi
+
+# Mount the network share (if isn't mounted)
+mount -a
+
+# Check if backup directory exists
+if [ ! -d "$DIR" ];
+   then
+      echo "Network share is unavailable or backup directory doesn't exist, creating it now!"
+      mkdir $DIR
+fi
+
+# Create a filename with datestamp for our current backup (without .img suffix)
+OFILE="${DIR}backup_$(date +%Y%m%d_%H%M%S)"
+
+# Create final filename, with suffix
+OFILEFINAL=$OFILE.img
+
+#Create backup filename for reference, with suffix
+OFILEBKP="backup_$(date +%Y%m%d_%H%M%S)".img
+
+# First sync disks
+sync; sync
+
+# Shut down some services before starting backup process
+echo "                                     "
+echo "Stopping some services (apache, mysql, cron) before backup."
+echo "                                     "
+# To eliminate cron warnings must replace: "service" with full path: "/usr/sbin/service".
+/usr/sbin/service apache2 stop
+/usr/sbin/service mysql stop
+/usr/sbin/service cron stop
+
+# Begin the backup process, should take about  20 minutes for a 8Gb/10class SD card to the network share
+# Set a reasonable time limit (45 min)for removing network jams
+echo "                                        "
+echo "Backing up SD card to the network share."
+echo "                                        "
+echo "This will take some time depending on SD card size and read performance. Please be patient and wait..."
+echo "                                             "
+SDSIZE=`/sbin/blockdev --getsize64 /dev/mmcblk0`;
+pv -tpreb /dev/mmcblk0 -s $SDSIZE | timeout 45m dd of=$OFILE bs=1M conv=sync,noerror iflag=fullblock
+
+# Wait for DD to finish and catch result
+RESULT=$?
+
+# Start services again that where shutdown before backup process
+echo "                                 "
+echo "Start the stopped services again."
+echo "                                 "
+/usr/sbin/service apache2 start
+/usr/sbin/service mysql start
+/usr/sbin/service cron start
+
+# If command has completed successfully, delete previous backups and exit
+if [ $RESULT = 0 ];
+then
+      tput setaf 2
+      echo "                                                              "
+      echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+      echo "!! Successful backup, previous backup files will be deleted !!"
+      echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+      echo "                                                              "
+      tput setaf 7
+      rm -f $DIR/backup_*.img
+      mv $OFILE $OFILEFINAL
+      tput setaf 6
+      echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+      echo "!! BACKUP FILE is saved in ...//$OFILEBKP  !!"
+      echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+      echo "                                                              "
+      echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+      echo "!!          RaspberryPI BACKUP process COMPLETED.           !!"
+      echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+      echo "                                                              "
+      tput setaf 7
+# Send Email
+echo ">>> SUCCESSFUL BACKUP @ "$(date '+%a %d %b %Y %H:%M:%S') "<<<" | mail -r "\"rPi"\" -s "backup" $TOADDR1 $TOADDR2
+# Else remove attempted backup file and warns
+else
+      rm -f $OFILE
+      echo "                                                              "
+      echo "Please check the availability of your network share.          "
+      echo "                                                              "
+      echo "Backup failed! Previous backup files untouched.               "
+      echo "                                                              "
+      tput setaf 1
+      echo "                                                              "
+      echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+      echo "!!           RaspberryPI BACKUP process FAILED.             !!"
+      echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+      echo "                                                              "
+      tput setaf 7
+# Send Email
+echo ">>> UNSUCCESSFUL BACKUP @ "$(date '+%a %d %b %Y %H:%M:%S') "<<<" | mail -r "\"rPi"\" -s "backup" $TOADDR1 $TOADDR2
+fi
+
+tput setaf 6
+echo "==================================================="
+echo "                                                   "
+echo "Raspberry Pi BACKUP process finished!"
+echo "                                                   "
+echo $HOSTNAME ">>>>" $(date '+%a %d %b %Y %H:%M:%S')
+echo "                                                   "
+echo "==================================================="
+echo "                                                   "
+tput setaf 7
+

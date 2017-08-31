@@ -1,0 +1,116 @@
+#!/usr/bin/python
+
+import sqlite3 as lite
+import datetime
+
+import socket
+import sys
+import time
+
+def get_lock(process_name):
+    global lock_socket
+    lock_socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+    try:
+        lock_socket.bind('\0' + process_name)
+        return True
+    except socket.error:
+        print "Process already running!"
+        sys.exit()
+
+
+class cPwm():
+    _db = '/var/www/html/files/protected/pwm_control/storage/pwm.db'
+    _log = "/var/log/pwm.log"
+    def __init__(self):
+        self.con = lite.connect(self._db)
+        self.cursor = self.con.cursor()
+
+    def __del__(self):
+        self.con.close()
+
+    def time_now(self):
+        dt = datetime.datetime.now().strftime("%H:%M:%S")
+        hh = dt.split(":")[0]
+        mm = dt.split(":")[1]
+        ss = dt.split(":")[2]
+        time = (int(hh) * 3600) + (int(mm) * 60) + int(ss)
+        return time
+
+
+    def update_driver_table(self):
+        query = '''
+            INSERT OR REPLACE into drivers(id,group_id, value, value_applied)
+            SELECT
+                drivers.id,
+                drivers.group_id,
+                coalesce(a.value, 0),
+                0
+             FROM drivers
+             LEFT OUTER JOIN
+             (
+                SELECT
+                    configs.group_id,
+                    configs.id,
+                    configs.start,
+                    configs.end,
+                    configs.value
+                FROM configs
+                WHERE
+                    configs.enabled="1"
+                    and configs.start <= %d
+                    and configs.end > %d
+             ) a ON a.id = drivers.id and a.group_id = drivers.group_id
+             WHERE
+                 drivers.config_enabled="1"
+                 AND coalesce(a.value, 0) != drivers.value
+            '''
+        tm = self.time_now()
+
+        self.cursor.execute(query % (tm, tm))
+        self.con.commit()
+
+    def i2c_write(self, id, module, value):
+        return True
+
+    def write_log(self, txt):
+        tm = datetime.datetime.now()
+        with open(self._log, "a") as myfile:
+            myfile.write("[ %s ] : %s\n" % (tm, txt))
+
+    def apply_new_values(self):
+        query = 'SELECT id, group_id, value FROM drivers WHERE value_applied != 1'
+        self.cursor.execute(query)
+        result = self.cursor.fetchall()
+        success_array = []
+        error_array = []
+        for driver in result:
+            if(self.i2c_write(id = driver[0], module = driver[1], value = driver[2])):
+                success_array.append(driver)
+                self.write_log(
+                    "ID: %s MODULE: %s VALUE: %s [I2C WRITE STATUS: OK]" %
+                    (
+                    str(driver[0]).zfill(2),
+                    str(driver[1]).zfill(2),
+                    str(driver[2]).zfill(2)
+                    ))
+            else:
+                error_array.append(driver)
+                self.write_log(
+                    "ID: %s MODULE: %s VALUE: %s [I2C WRITE STATUS: ERROR]" %
+                    (
+                    str(driver[0]).zfill(2),
+                    str(driver[1]).zfill(2),
+                    str(driver[2]).zfill(2)
+                    ))
+        applied_query = 'UPDATE drivers SET value_applied = 1 WHERE id=? and group_id=? and value=?'
+        self.cursor.executemany(applied_query, success_array)
+        self.con.commit()
+
+
+if __name__ == "__main__":
+    get_lock('pwm_daemon')
+    pwm = cPwm()
+    while True:
+        pwm.update_driver_table()
+        pwm.apply_new_values()
+        time.sleep(3)

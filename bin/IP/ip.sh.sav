@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# ============================================================================
+# >>> Modify this script to set TOADDR <<<
+# ============================================================================
+
+TOADDR1="ovidiu.constantin@kantarmedia.com"
+TOADDR2="ovidiu.constantin@gmx.com"
+
+HOSTNAME=$(/bin/hostname)
+NOW=$(date '+%a %d %b %Y %H:%M:%S')
+
+# archive directory (volatile, in RAM)
+DIR="/var/www/files/data/TMPFS/IP/"
+
+# check if directory exists - after reboot RAM is erased & this directory is missing
+if [ ! -d "$DIR" ];
+   then
+      echo "IP directory doesn't exist, creating it now!"
+      mkdir $DIR
+fi
+
+SAVIP=""
+OLDIP=""
+NEWIP="xxx"
+
+#query to get own ip
+MYIP=$(/sbin/ifconfig |awk -v i=2 -v j=1 'FNR ==  i{print $2}' |cut -b6-50)
+#WMYIP=$(/sbin/ifconfig |awk -v i=18 -v j=1 'FNR ==  i{print $2}' |cut -b6-50)
+
+#internet server query to get public ip
+#NEWIP=$(wget -qO- ipecho.net/plain)
+#NEWIP=$(wget -qO - ifconfig.co/x-real-ip)
+NEWIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
+
+#save previous wan ip
+cp ${DIR}ip.txt ${DIR}sav.ip.txt
+
+read OLDIP < ${DIR}ip.txt
+read SAVIP < ${DIR}sav.ip.txt
+
+#save new wan ip
+echo "$NEWIP" > ${DIR}ip.txt
+
+if [ "$OLDIP" != "" ] #after reboot this variable is null (ram is erased)
+ then
+  if [ "$NEWIP" != ";; connection timed out; no servers could be reached" ] #sometime the server is unavaible
+   then
+    if [ "$NEWIP" != "" ] #if server is unavaible this variable can be null
+     then
+      if [ "$NEWIP" != "$OLDIP" ] #real change of external ip
+       then
+        echo "$NEWIP" > /var/www/files/data/TMPFS/IP/ip.txt
+        echo -e "$HOSTNAME @  $NOW\n\nNEW WAN IP: $NEWIP\n\nPREVIOUS WAN IP: $SAVIP\n\nLAN IP: $MYIP" | mail -r "\"$HOSTNAME"\" -s "WARNING!! External IP changed" $TOADDR1 $TOADDR2
+        #echo -e "$HOSTNAME @  $NOW\n\nNEW WAN IP: $NEWIP\n\nPREVIOUS WAN IP: $SAVIP\n\nLAN IP: $MYIP\n\nWLAN IP: $WMYIP" | mail -r "\"$HOSTNAME"\" -s "WARNING!! External IP changed" $TOADDR1 $TOADDR2
+      fi
+    fi
+  fi
+fi

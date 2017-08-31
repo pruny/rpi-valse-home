@@ -1,0 +1,35 @@
+===================================================
+rPi-valse >>>> Mon 07 Sep 2015 03:00:01
+Starting BACKUP process! Please wait...
+Stopping web server: apache2 ... waiting .
+Stopping periodic command scheduler: cron.
+Starting web server: apache2.
+Starting periodic command scheduler: cron.
+BACKUP process COMPLETED. Backup file is saved in USB flash drive: /media/usb.flash/bkp@rPi/backup_20150907_030001.img
+rPi-valse >>>> Mon 07 Sep 2015 03:15:41
+===================================================
+===================================================
+rPi-valse >>>> Mon 14 Sep 2015 03:00:01
+Starting BACKUP process! Please wait...
+Stopping web server: apache2 ... waiting .
+Stopping periodic command scheduler: cron.
+Starting web server: apache2.
+Starting periodic command scheduler: cron.
+BACKUP process COMPLETED. Backup file is saved in USB flash drive: /media/usb.flash/bkp@rPi/backup_20150914_030001.img
+rPi-valse >>>> Mon 14 Sep 2015 03:16:08
+===================================================
+===================================================
+rPi-valse >>>> Mon 21 Sep 2015 03:00:01
+Starting BACKUP process! Please wait...
+Stopping web server: apache2 ... waiting .
+Stopping periodic command scheduler: cron.
+Starting web server: apache2.
+Starting periodic command scheduler: cron.
+BACKUP process COMPLETED. Backup file is saved in USB flash drive: /media/usb.flash/bkp@rPi/backup_20150921_030001.img
+rPi-valse >>>> Mon 21 Sep 2015 03:16:31
+===================================================
+===================================================
+rPi-valse >>>> Mon 28 Sep 2015 03:00:01
+Starting BACKUP process! Please wait...
+Stopping web server: apache2 ... waiting .
+Stopping periodic command scheduler: cron.

@@ -1,0 +1,31 @@
+#!/usr/bin/env python
+
+import re
+import sys
+import os
+
+_ssmtp_file = "/etc/ssmtp/ssmtp.conf"
+
+def change_ssmtp():
+
+    file_handle = open(_ssmtp_file, 'r')
+    file_string = file_handle.read()
+    file_handle.close()
+
+    file_string = re.sub(".*AuthUser.*", "AuthUser=%s" % sys.argv[1], file_string)
+    file_string = re.sub(".*AuthPass.*", "AuthPass=%s" % sys.argv[2], file_string)
+
+    file_handle = open(_ssmtp_file, 'w')
+    file_handle.write(file_string)
+    file_handle.close()
+
+if __name__ == "__main__":
+  if len(sys.argv) != 3:
+    print ">>> ERROR: incorrect command, wrong format <<<"
+    print " "
+    print "    [change_ssmtp] [somebody@gmail.com] [mysecretword]"
+    print " "
+    print ">>> Special characters - symbols must be preceded by \ (ex: \! or\* ...) <<<"
+    exit()
+
+  change_ssmtp()

@@ -1,0 +1,112 @@
+<a id="create_config_time_btn" class="btn-floating btn-large waves-effect waves-light green" style="z-index: 1000"><i class="material-icons">add</i></a>
+
+<div class="row">
+
+    <div class="col s4">
+      <a id="configs_back_btn" class="modal-trigger btn-floating btn-large waves-effect waves-light purple tooltipped" data-position="right" data-delay="30" data-tooltip="Back"><i class="material-icons">arrow_back</i></a>
+    </div>
+
+
+  {{if title}}
+ <div class="col s4 center-align" id="configs_time_data_title">
+  <h4>{{:title}}</h4>
+ </div>
+ {{/if}}
+
+
+ <div class="col s4 right-align">
+     <a id="import_config_btn" class="btn-floating btn-large waves-effect waves-light pink darken-2 tooltipped" data-position="left" data-delay="30" data-tooltip="IMPORT"><i class="material-icons">cloud_download</i></a>
+  {{if saving && saving == "1"}}
+    <img class="noselect" style="width: 65px" src="img/spin.svg" />
+  {{else}}
+    <a id="save_config_btn" class="btn-floating btn-large waves-effect waves-light light-blue darken-2 tooltipped" data-position="right" data-delay="30" data-tooltip="SAVE & EXPORT"><i class="material-icons">cloud_upload</i></a>
+  {{/if}}
+
+ </div>
+
+
+</div>
+
+<div class="divider"></div>
+  <div id="configs_time_data_result">
+     <div>
+
+     {{if time.length > 0}}
+     <table><thead>
+        <th>Status</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Duration</th>
+        <th style="text-align: center">Value</th>
+        <th style="text-align: right">Options</th>
+      </thead><tbody>
+
+      {{for time}}
+
+      {{if overlap && overlap == true}}
+        <tr style="background-color: #efdcdc;">
+      {{else}}
+
+          {{if indb}}
+            {{if enabled == "1"}}
+              <tr style="background-color: #dcefdc;">
+            {{else}}
+              <tr style="background-color: #f1f1f1;">
+            {{/if}}
+          {{else}}
+            {{if enabled == "1"}}
+              <tr style="color: #4CAF50; background-color: #dcefdc;">
+            {{else}}
+              <tr style="color: #4CAF50; background-color: #f1f1f1">
+            {{/if}}
+          {{/if}}
+
+        {{/if}}
+        {{if enabled && enabled == "1"}}
+
+        <!--<td class='config_options_td'><a class="btn-floating green config_status noselect"><i class="material-icons">done</i></a></td>-->
+        <td class="config_options_td"><div class="status_icon_div green tooltipped noselect" data-position="right" data-delay="30" data-tooltip="Enabled">
+          <i class="material-icons status_icon">done</i>
+        </div></td>
+        {{else}}
+        <!--<td class='config_options_td'><a class="btn-floating grey config_status noselect"><i class="material-icons">block</i></a></td>-->
+        <td class="config_options_td"><div class="status_icon_div grey tooltipped noselect" data-position="right" data-delay="30" data-tooltip="Disabled">
+          <i class="material-icons status_icon">block</i>
+        </div></td>
+        {{/if}}
+
+
+        <td id="{{:#index}}_start" class='time'>{{:start}}</td>
+        <td id="{{:#index}}_end" class='time'>{{:end}}</td>
+        <td id="{{:#index}}_duration" class='time'>{{:duration}}</td>
+        <td id="{{:#index}}_value" class='value' style="text-align: center">{{:value}}</td>
+        <td  class="config_options_td" style="text-align: right;">
+            {{if enabled && enabled == "1"}}
+            <a  id="disable_enable_cfg_{{:#parent.index}}" class="btn-floating tooltipped grey noselect" data-position="left" data-delay="30" data-tooltip="Disable"><i class="material-icons">block</i></a>
+            {{else}}
+            <a  id="disable_enable_cfg_{{:#parent.index}}" class="btn-floating tooltipped green noselect" data-position="left" data-delay="30" data-tooltip="Enable"><i class="material-icons">done</i></a>
+            {{/if}}
+
+          <a  id="delete_cfg_{{:#index}}" class="btn-floating tooltipped red noselect" data-position="right" data-delay="30" data-tooltip="Delete"><i class="material-icons">delete_forever</i></a>
+        </td>
+      </tr>
+      {{/for}}
+
+      </tbody></table>
+      {{else}}
+        <div style="margin: 0; position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%)">
+          <h5 class="noselect" style="color: #cccccc; cursor: default;">No time data available for this driver</h5>
+        </div>
+      {{/if}}
+     </div>
+
+</div>
+
+  <div id="clockpicker_div" class="clockpicker"><input type="text" id="clkpicker" class="form-control" value="00:00" readonly></div>
+
+<div id="cfg_value_slider" style="display: none;">
+  <div class=slider id="mod_slider_configs"></div>
+</div>
+
+<!-- MODAL CONTAINERS -->
+<div id="cfg_import_csv_modal_div"></div>

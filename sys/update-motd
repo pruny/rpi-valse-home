@@ -1,0 +1,79 @@
+#!/bin/sh
+
+upSeconds=`/usr/bin/cut -d. -f1 /proc/uptime`
+secs=$(($upSeconds%60))
+mins=$(($upSeconds/60%60))
+hours=$(($upSeconds/3600%24))
+days=$(($upSeconds/86400))
+WEATHER=`curl -s "http://rss.accuweather.com/rss/liveweather_rss.asp?metric=1&locCode=EUR|RO|RO010|VALSANESTI|" \
+| grep '<description>Currently in' | sed -e 's/^[ \t]*//' | cut -b27- |sed 's/\&\#176\;//g'| sed 's/ C / °C /g'`
+HOSTNAME=`/bin/hostname`
+DATE=`date +"%A, %e %B %Y, %R"`
+OS=`uname -srvmo`
+UP=`printf "%d days, %02dh %02dm %02ds " "$days" "$hours" "$mins" "$secs"`
+SPEED=$(( `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq | awk {'print $1'}`/1000))
+TEMP=`cat /sys/class/thermal/thermal_zone0/temp | awk '{printf("%.1f""°C\n",$1/1e3)}'`
+Tmem=`free -t -m | grep 'Mem:' | awk {'print $2'}`
+Umem=`free -t -m | grep 'Mem:' | awk {'print $3'}`
+Fmem=`free -t -m | grep 'Mem:' | awk {'print $4'}`
+PROC=`ps ax | wc -l | tr -d " "`
+USERCOUNT=`users | wc -w`
+USERCONN=`w -h | awk '{print $1" ---> "$3}'| sed ':a;N;$!ba;s/\n/\n                               /g'`
+Tfs=`df -h | grep 'dev/root' | awk '{print $2}'`
+Ufs=`df -h | grep 'dev/root' | awk '{print $3}'`
+Ffs=`df -h | grep 'dev/root' | awk '{print $4}'`
+Tdt=`df -h | grep 'dev/mmcblk0p3' | awk '{print $2}'`
+Udt=`df -h | grep 'dev/mmcblk0p3' | awk '{print $3}'`
+Fdt=`df -h | grep 'dev/mmcblk0p3' | awk '{print $4}'`
+Tusb=`df -h | grep 'media/usb.drive' | awk '{print $2}'`
+Uusb=`df -h | grep 'media/usb.drive' | awk '{print $3}'`
+Fusb=`df -h | grep 'media/usb.drive' | awk '{print $4}'`
+WAN=`dig +short myip.opendns.com @resolver1.opendns.com`
+LAN=$(/sbin/ifconfig |awk -v i=2 -v j=1 'FNR ==  i{print $2}' |cut -b6-50)
+WLAN=$(/sbin/ifconfig |awk -v i=18 -v j=1 'FNR ==  i{print $2}' |cut -b6-50)
+echo "\033[94m
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                   ooooooooo.    o8o  ║
+║                                                    888   .Y88.  .o.  ║
+║  .ooooo.  .ooo. .oo.  .oo.   .ooooo.  .ooo. .oo.   888   .d88. oooo  ║
+║ d88   88b  888PoY88bPoY88b  d88   88b  888PoY88b   888ooo88P    888  ║
+║ 888ooo888  888   888   888  888   888  888   888   888          888  ║
+║ 888        888   888   888  888   888  888   888   888          888  ║
+║ .Y8bod8P. o888o o888o o888o .Y8bod8P. o888o o888o o888o        o888o ║
+╚══════════════════════════════════════════════════════════════════════╝\033[0;33m
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.\033[0;0m
+
+Status:\033[94m
+   system....................: $OS - Jessie\033[0;0m
+   uptime....................: $UP
+   cpu speed.................: 4 X $SPEED""MHz
+   temperature...............: $TEMP
+   memory....................: $Tmem""MB (Total) / $Umem""MB (Used) / $Fmem""MB (Free)\033[1;31m
+   system file space.........: $Tfs""B (Total) / $Ufs""B (Used) / $Ffs""B (Free) on SD card\033[1;32m
+   data file space...........: $Tdt""B (Total) / $Udt""B (Used) / $Fdt""B (Free) on SD card\033[0;0m
+   running processes.........: $PROC
+   connections...............: $USERCOUNT
+   ssh users.................: $USERCONN
+
+IP Adresses:
+   external..................: $WAN
+   local (wired).............: $LAN
+   local (wireless)..........: $WLAN
+
+Hostname.....................: $HOSTNAME
+
+Weather......................: $WEATHER
+
+Screenshot...................: $DATE\033[1;32m
+
+The /home/pi/data directory is always in Read Write (RW) mode.\033[1;31m
+The file system is usually in Read Only (RO) mode.\033[0m
+If you need to make changes,\033[1;32m
+use the command 'rpi-rw' to put the file system in Read Write (RW) mode.\033[1;31m
+Use 'rpi-ro' to return to Read Only (RO) mode.\033[0m" > /home/pi/data/motd

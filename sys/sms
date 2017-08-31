@@ -1,0 +1,18 @@
+#!/usr/bin/python
+
+import os
+
+if __name__ == "__main__":
+  import sys
+  if len(sys.argv) != 3 or len(sys.argv[1]) != 10:
+    print "ERROR: Usage >>> [sms] [phone number (07xxxxxxxx)] \"[message text (max. 160 characters)]\"" 
+    exit()
+  if len(sys.argv[2]) > 160:
+    print "\nMesaj netrimis! Marimea mesajului nu poate depasi 160 caractere."
+    #print "Marimea mesajului nu poate depasi 160 caractere."
+    print "Mesajul tau contine: "+str(len(sys.argv[2]))+" charactere!\n" 
+    exit()
+  #os.system("gammu-smsd-inject TEXT +4%s -text \"%s\"" % (sys.argv[1].strip(), sys.argv[2].strip()) )
+  os.system("echo \"%s\" | gammu-smsd-inject TEXT +4%s" % (sys.argv[2].strip(), sys.argv[1].strip()) )
+
+

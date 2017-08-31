@@ -1,0 +1,61 @@
+<!-- BUTTONS -->
+<div class="row">
+
+    <div  class="col s4">
+        <a id="module_id" class="modal-trigger btn-floating btn-large waves-effect waves-light tooltipped light-blue darken-2" data-position="right" data-delay="30" data-tooltip="Select MODULE">01</a>
+    </div>
+
+    <!--<div class="right-align">-->
+    <div  class="col s4 center-align">
+      <a id="select_toggle" class="btn-floating btn-large waves-effect waves-light orange tooltipped" data-position="left" data-delay="30" data-tooltip="Select ALL">
+          <i class="material-icons">radio_button_checked</i>
+      </a>
+    </div>
+
+    <div  class="col s4 right-align">
+      <!-- Bottom FAB -->
+      <div class="fixed-action-btn horizontal click-to-toggle" style="position: relative; bottom:0; right:0; padding: 0;">
+         <a class="btn-floating btn-large light-blue darken-2 noselect">
+           <i class="large material-icons">menu</i>
+         </a>
+         <ul>
+           <li><a id="change_drv_values" class="btn-floating orange tooltipped noselect" data-position="top" data-delay="30" data-tooltip="CHANGE driver value"><i class="material-icons">track_changes</i></a></li>
+           <li><a id="enable_config_btn" class="btn-floating green darken-1 tooltipped noselect" data-position="top" data-delay="30" data-tooltip="ENABLE config"><i class="material-icons">done</i></a></li>
+           <li><a id="disable_config_btn" class="btn-floating grey tooltipped noselect" data-position="top" data-delay="30" data-tooltip="DISABLE config"><i class="material-icons">block</i></a></li>
+           <li><a id="edit_config" class="btn-floating purple tooltipped noselect" data-position="top" data-delay="30" data-tooltip="EDIT config"><i class="material-icons">mode_edit</i></a></li>
+         </ul>
+       </div>
+    </div>
+
+
+</div>
+
+<div class="divider"></div>
+
+<!-- CARDS -->
+<div id="drivers_card_content" class="row">
+  {{for drivers}}
+  <div class='col s12 m12 l3'>
+    <div class='card' id='card_{{:id}}'>
+      <span class='card-title'>Driver {{:id}}</span>
+      <div class='card-content'>
+      <!--<span id='group_icon_{{:id}}' class='group_icon'><i style='color: #d0d0d0' class='small material-icons'>filter_1</i></span>-->
+      <span  id='driver_disabled_icon_{{:id}}' class='driver_disabled_icon noselect hidden'><i style='color: #b1b1b1' class='small material-icons'>block</i></span>
+        <div
+          class='pie_progress'
+          id='slider_{{:id}}'
+          role='progressbar'
+          data-barcolor='#0288d1'
+          data-barsize='15'>
+            <div class='pie_progress__number'>0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/for}}
+</div>
+
+<!-- MODAL CONTAINERS -->
+<div id="drv_module_select"></div>
+<div id="drv_value"></div>
+<div id="drv_status"></div>

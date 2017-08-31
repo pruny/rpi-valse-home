@@ -1,0 +1,24 @@
+se ataseaza monitor si tastatura la rpi si dupa ce rpi booteaza prima oara, se fac modificarile dorite in raspi.config.
+
+trebuie reboot pentru a se incarca modificarile facute.
+
+apoi se modifica parametrii de retea : /etc/network/interfaces (adrese) si /etc/resolv.conf (dns) - vezi setarile salvate in fisierele de bkp.
+
+optional se poate seta parola de root
+
+dupa aceasta, se poate lucra in ssh, fara monitor atasat.
+
+se updateaza / upgradeaza sistemul: apt-get update / apt-get upgrade
+
+se instaleaza aplicatiile necesare: apt-get install ***
+
+	ex: ssmtp heirloom-mailx (utilitar mail), pv (cursor monitorizare date), bc (utilitar aritmetic), ntfs-3g (utilitar NTFS file system),
+	    apache2 php5 libapache2-mod-php5 (server web), rrdtool (baza date RRD), watchdog chkconfig (watchdog),
+	    python-smbus (utilitar smbus si i2c) sau doar i2c-tools (doar utilitar i2c), wakeonlan (utilitar wol in reteaua privata),
+	    wiringPi (utilitar GPIO, etc) ( http://wiringpi.com/download-and-install/ ) 
+
+se monteaza driverele necesare: modprobe *** (pentru montare definitiva, se inregistreaza apoi in /etc/module)
+
+	ex: wire, w1gpio, w1-therm (drivere 1 wire), bcm2708_wdog (hw-watchdog), i2c-dev (i2c devices), rtc-ds1307 (hw-rtc),
+
+se seteaza cheile publice (/root/.ssh/id_rsa.pub de la rPi-buc in /root/.ssh/authorized_keys in rPi-valse si viceversa) pentru conectare ssh intre cele 2 rPi

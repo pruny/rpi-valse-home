@@ -1,0 +1,46 @@
+#!/bin/bash
+
+### SETUP ###
+#############
+
+yyyy=$(date +\%Y)
+mm=$(date +\%m)
+dd=$(date +\%d)
+
+BAKDIR="/home/pi/data/shared/pin_status"
+DAILY=$BAKDIR"/activity/${yyyy}/${mm}/gpio_status.${yyyy}${mm}${dd}"
+LAST=$BAKDIR"/gpio.last"
+
+# permit filing states gpio (aka "buttons") from web interface
+#-------------------------------------------------------------
+
+if [ ! -d $BAKDIR"/${yyyy}/${mm}/" ];then
+  mkdir -p $BAKDIR/activity/${yyyy}/${mm}/
+  chown -R www-data:www-data $BAKDIR/activity/${yyyy}/${mm}/
+fi
+
+### MAIN ###
+############
+
+if [[ $1 == "write" ]]
+then
+  if [[ $(/usr/bin/gpio read $2) != $3 ]]
+  then
+    /usr/bin/gpio $@
+    if [[ "$?" == "0" ]]
+    then
+      if [[ $(/usr/bin/gpio read $2) != $3 ]]
+      then
+        exit 1
+      fi
+      # save all switching (append switching file)
+      echo $2 $3 $(date +\%s\%3N) $(date +"%H:%M:%S:%3N ") >> $DAILY
+      # save only last switching
+      sed  -i "s/.*[ ^]$2[ ^].*/$(date +\%s\%3N) $(date +%d.%m.%Y) $(date +%H:%M:%S:%3N) $2 $3/" $LAST
+    fi
+  else
+    /usr/bin/gpio $@
+  fi
+else
+  /usr/bin/gpio $@
+fi

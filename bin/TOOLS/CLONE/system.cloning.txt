@@ -1,0 +1,52 @@
+# ***
+# logheaza-te ca root in consola ssh
+
+# introdu noul stik usb intr-un port liber
+
+# din consola introdu urmatoarele comenzi
+
+	gdisk /dev/sdb
+	p
+	d
+	n
+	confirma - apasa enter
+	confirma - apasa enter
+	confirma - apasa enter
+	confirma - apasa enter
+	i
+	copiaza identificatorul din campul aflat dupa Partition unique GUID : XXXXXXXXXX
+	w
+	y
+
+# copiaza noul identificator XXXXXXXXXX in fisierul /boot/cmdline.txt peste cel actual.
+# ai grija sa nu modifici nimic altceva sau sa strici formatul... :-)
+
+# formateaza partitia nou creata
+	mke2fs -t ext4 -L rootfs /dev/sdb1
+
+# monteaz-o...
+
+	mount dev/sdb1 /media/clone
+
+# copiaza partitia radacina
+
+	rsync -axv / /media/clone
+	asteapta, dureaza ceva timp...
+
+# afla identificatorul ce va fi folosit in fstab
+
+	tune2fs -l /dev/sdb1
+	copiaza identificatorul din campul aflat dupa Filesystem UUID: YYYYYYYYYY
+
+# copiaza noul identificator YYYYYYYYYY in fisierul fstab din noul stick usb - /media/clone/etc/fstab peste cel actual: /dev/disk/by-uuid/OLD-OLD-OLD-OLD  /ext4  defaults,noatime  0  1
+# incearca sa nu strici formatul... :-)
+
+# acuma poti opri sistemul
+# scoate alimentarea
+# scoate vechiul stick usb
+# reintodu alimentarea
+# daca ai respectat pasii de mai sus, sistemul va porni pe noul stick usb
+
+# ***
+
+	

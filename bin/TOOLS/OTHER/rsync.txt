@@ -1,0 +1,7 @@
+
+### rsync in local lan
+rsync -avh /root/TOOLS/rsync.txt -e 'ssh' root@192.168.1.122:/root
+
+
+### rsync over internet
+rsync -avh /home/elephant/bin/car_wash -e 'ssh -p 2020' root@<IP>:/home/elephant/bin

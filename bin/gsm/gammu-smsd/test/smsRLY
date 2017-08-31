@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+
+
+import socket
+import sys
+
+
+addr = "192.168.1.123"
+port = 2000
+buffer = 128
+
+try:
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.connect((addr, port))
+	qry = '{"get":"relayStatus"}'
+	s.send(qry)
+	answ = s.recv(buffer)
+	s.close()
+# daca nu exista conexiune la RLY printeaza mesaj predefinit de eroare
+except Exception as e:
+	print '>>> RLY-8 module is not available! <<<'
+	print '{"relay1":"n/a","relay2":"n/a","relay3":"n/a","relay4":"n/a","relay5":"n/a","relay6":"n/a","relay7":"n/a","relay8":"n/a"}'
+	sys.exit(1)
+
+print answ
+
+answ = answ.replace("off", "0")
+answ = answ.replace("on", "1")
+
+rly1 = answ[11:12]
+rly1 = rly1.replace("0", "-idle-")
+rly1 = rly1.replace("1", "ACTIVAT")
+
+rly2 = answ[24:25]
+rly2 = rly2.replace("0", "-idle-")
+rly2 = rly2.replace("1", "ACTIVAT")
+
+rly3 = answ[37:38]
+rly3 = rly3.replace("0", "-idle-")
+rly3 = rly3.replace("1", "ACTIVAT")
+
+rly4 = answ[50:51]
+rly4 = rly4.replace("0", "-idle-")
+rly4 = rly4.replace("1", "ACTIVAT")
+
+rly5 = answ[63:64]
+rly5 = rly5.replace("0", "-idle-")
+rly5 = rly5.replace("1", "ACTIVAT")
+
+rly6 = answ[76:77]
+rly6 = rly6.replace("0", "-idle-")
+rly6 = rly6.replace("1", "ACTIVAT")
+
+rly7 = answ[89:90]
+rly7 = rly7.replace("0", "-idle-")
+rly7 = rly7.replace("1", "ACTIVAT")
+
+rly8 = answ[102:103]
+rly8 = rly8.replace("0", "-idle-")
+rly8 = rly8.replace("1", "ACTIVAT")
+
+
+print (rly1, rly2, rly3, rly4, rly5, rly6, rly7, rly8)
+
+
+"""
+---------------------------------------------------------------------------------------------------------------------------------
+answ poate arata astfel:
+
+{"relay1":"off","relay2":"off","relay3":"off","relay4":"off","relay5":"off","relay6":"off","relay7":"off","relay8":"off"}
+
+"on"=="ACTIVAT" || "off"=="-idle-" || "n/a"
+
+val1 = "ACTIVAT" || "-idle-" || "n/a"
+val2 = "ACTIVAT" || "-idle-" || "n/a"
+val3 = "ACTIVAT" || "-idle-" || "n/a"
+val4 = "ACTIVAT" || "-idle-" || "n/a"
+val5 = "ACTIVAT" || "-idle-" || "n/a"
+val6 = "ACTIVAT" || "-idle-" || "n/a"
+val7 = "ACTIVAT" || "-idle-" || "n/a"
+val8 = "ACTIVAT" || "-idle-" || "n/a"
+---------------------------------------------------------------------------------------------------------------------------------
+
+"""

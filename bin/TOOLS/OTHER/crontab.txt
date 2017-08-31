@@ -1,0 +1,10 @@
+
+##########
+salveaza crontab in fisierul my_txt:
+
+crontab -l > my_txt
+
+##########
+schimba crontab conform fisierului my_txt:
+
+crontab my_txt

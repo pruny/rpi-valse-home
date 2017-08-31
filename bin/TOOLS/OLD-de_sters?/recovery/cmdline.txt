@@ -1,0 +1,1 @@
+dwc_otg.lpm_enable=0 console=tty1 root=PARTUUID=AC317854-B2E1-47FB-83AF-894801545A5E rootfstype=ext4 elevator=deadline rootwait rootdelay=5

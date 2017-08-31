@@ -1,0 +1,525 @@
+#!/usr/bin/python
+
+import RPi.GPIO as GPIO
+import sys
+import os
+import time
+import lcddriver
+import subprocess
+import time
+import socket
+
+
+
+
+#-------------------
+#	SETUP
+#-------------------
+
+# initial setup of gammu-smsd file location
+#------------------------------------------
+gammu_dir = "/var/www/TMPFS/GSM/"
+
+if(not os.path.isdir(gammu_dir)):
+    os.makedirs(gammu_dir)
+    os.chown(gammu_dir, 113, 118)	
+    sys.exit(1)
+
+
+# RLY-8 values
+#-------------
+ip = "192.168.1.123"	### " " because is a string
+port = 2000
+buffer = 128
+
+# black list numbers
+#-------------------
+blklst = ["+40742293455", "+40733331237"]
+
+# manager's phone number
+#-----------------------
+svnr = "+40733331236"
+
+# lcd i2c address
+#----------------
+i2c = 0x3f		### is a number (hex)
+
+# gpio setup
+#-----------
+#GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
+#GPIO.setmode(GPIO.WPI)
+GPIO.setwarnings(False)
+
+#-------------------
+#	PINS
+#-------------------
+
+# 8 BOARD input pins:	12, 13, 15, 19, 21, 23, 18, 22, 26
+# 8 BCM input pins:	27, 22, 23, 24, 25, 10, 9, 11, 7
+#-------------------------------------------------------------------------------------------------------
+GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_UP)	# input#1		board#12  bcm#18  wpi#1
+GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)	# input#2		board#13  bcm#27  wpi#2
+GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)	# input#3		board#15  bcm#22  wpi#3
+GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_UP)	# input#4		board#19  bcm#10  wpi#12
+GPIO.setup(9, GPIO.IN, pull_up_down=GPIO.PUD_UP)	# input#5		board#21  bcm#9   wpi#13
+GPIO.setup(11, GPIO.IN, pull_up_down=GPIO.PUD_UP)	# input#6		board#23  bcm#11  wpi#14
+GPIO.setup(24, GPIO.IN)					# input#7		board#18  bcm#24  wpi#5
+GPIO.setup(25, GPIO.IN)					# input#8		board#22  bcm#25  wpi#6
+#GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP)	# gsm status led	board#26  bcm#7   wpi#11
+#GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)	# 1wire			board#7   bcm#4   wpi#7
+#GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP)	# free for future use	board#32  bcm#7   wpi#26
+
+# 8 BOARD output pins:	29, 31, 33, 35, 37, 36, 38, 40, 32
+# 8 BCM output pins:	5, 6, 13, 19, 26, 16, 20, 21, 12
+#-------------------------------------------------------------------------------------------------------
+GPIO.setup(5, GPIO.OUT)					# out#1			board#29  bcm#5   wpi#21
+GPIO.setup(6, GPIO.OUT)					# out#2			board#31  bcm#6   wpi#22
+GPIO.setup(13, GPIO.OUT)				# out#3			board#33  bcm#13  wpi#23
+GPIO.setup(19, GPIO.OUT)				# arteziana		board#35  bcm#19  wpi#24
+GPIO.setup(26, GPIO.OUT)				# apa solar		board#37  bcm#26  wpi#25
+GPIO.setup(16, GPIO.OUT)				# calorifer#1		board#36  bcm#16  wpi#27
+GPIO.setup(20, GPIO.OUT)				# calorifer#2		board#38  bcm#20  wpi#28
+GPIO.setup(21, GPIO.OUT)				# lumina curte		board#40  bcm#21  wpi#29
+
+# 8 EXTERNAL output pins cammanded by json string
+#-------------------------------------------------------------------------------------------------------
+
+
+
+
+
+#-------------------#
+#     FUNCTIONS     #
+#-------------------#
+
+
+def check_log():
+  #--------------------------------------------------------------------------------------------------------------------------------------
+  # check size of log file and remove it if is big
+  # recreate log file, chown new created log_file to user gammu and restart gammu-smsd.service - like terminator :-)) kill the own father
+  #--------------------------------------------------------------------------------------------------------------------------------------
+  log_file = "/home/pi/data/shared/gsm/gammu.log"
+  if os.path.isfile(log_file) and os.stat(log_file).st_size > 99999:
+    os.remove(log_file)
+    open(log_file, 'a').close()
+    os.chown(log_file, 113, 118)
+    os.system("systemctl restart gammu-smsd.service")
+
+
+def display(msg1, msg2="                "):
+  try:
+    lcd = lcddriver.lcd(i2c)
+    print "LCD detected @ I2C address: ", hex(i2c)
+    lcd.lcd_clear()
+    lcd.backlight = 1
+    lcd.lcd_display_string("  SMS command  ", 1)
+    lcd.lcd_display_string("  received !!  ", 2)
+    time.sleep(3)
+    lcd.lcd_clear()
+    time.sleep(0.2)
+    lcd.lcd_display_string(msg1, 1)
+    lcd.lcd_display_string(msg2, 2)
+    time.sleep(5)
+    lcd.lcd_clear()
+    lcd.backlight = 0
+  except Exception as e:
+    msg_error = "LCD NOT detected @ I2C address: %03x" % (i2c)
+    print msg_error
+    send_sms(msg_error)
+    pass
+
+
+def send_sms(msg, number=False):
+  if number:
+    phone_number = number
+  else:
+    phone_number = filename.split("_")[3]
+  os.system("sudo /usr/bin/gammu-smsd-inject EMS %s -text \"%s\" >>/dev/null" % (phone_number, msg) )
+
+
+def check_nr():
+      if (filename.split("_")[3] in blklst):
+        #display("# BLACKLISTED #", "#   NUMBER    #")
+        display("# BLACKLISTED #", " " + filename.split("_")[3])
+        sys.exit(0)
+
+
+def report():
+  if (filename.split("_")[3] != svnr):
+    send_sms("Received SMS command from {}\rSMS was: {}".format(
+      filename.split("_")[3],
+      message
+    ), svnr)
+
+
+def status():
+  #-------
+  # inputs
+  #-------
+  in1 = ""
+  in2 = ""
+  in3 = ""
+  in4 = ""
+  in5 = ""
+  in6 = ""
+  in7 = ""
+  in8 = ""
+  if GPIO.input(18):
+    in1 = "WARNING"
+  else:
+    in1 = "OK"
+  if GPIO.input(27):
+    in2 = "WARNING!"
+  else:
+    in2 = "OK"
+  if GPIO.input(22):
+    in3 = "WARNING!"
+  else:
+    in3 = "OK"
+  if GPIO.input(10):
+    in4 = "WARNING!"
+  else:
+    in4 = "OK"
+  if GPIO.input(9):
+    in5 = "WARNING!"
+  else:
+    in5 = "OK"
+  if GPIO.input(11):
+    in6 = "WARNING!"
+  else:
+    in6 = "OK"
+  if GPIO.input(24):
+    in7 = "WARNING!"
+  else:
+    in7 = "OK"
+  if GPIO.input(25):
+    in8 = "WARNING!"
+  else:
+    in8 = "OK"
+  #----------------------------------
+  # outputs - active level is LOW (0)
+  #----------------------------------
+  out1 = ""
+  out2 = ""
+  out3 = ""
+  out4 = ""
+  out5 = ""
+  out6 = ""
+  out7 = ""
+  out8 = ""
+  out9 = ""
+  if GPIO.input(5):
+    out1 = "-idle-"
+  else:
+    out1 = "ACTIVAT"
+  if GPIO.input(6):
+    out2 = "-idle-"
+  else:
+    out2 = "ACTIVAT"
+  if GPIO.input(13):
+    out3 = "-idle-"
+  else:
+    out3 = "ACTIVAT"
+  if GPIO.input(19):
+    out4 = "-idle-"
+  else:
+    out4 = "ACTIVAT"
+  if GPIO.input(26):
+    out5 = "-idle-"
+  else:
+    out5 = "ACTIVAT"
+  if GPIO.input(16):
+    out6 = "-idle-"
+  else:
+    out6 = "ACTIVAT"
+  if GPIO.input(20):
+    out7 = "-idle-"
+  else:
+    out7 = "ACTIVAT"
+  if GPIO.input(21):
+    out8 = "-idle-"
+  else:
+    out8 = "ACTIVAT"
+  #-----------------------------
+  # rly - connected via ethernet
+  #-----------------------------
+  try:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((ip, port))
+    qry = '{"get":"relayStatus"}'
+    s.send(qry)
+    answ = s.recv(buffer)
+    s.close()
+  except Exception as e:
+    answ = '{"relay1":"null","relay2":"null","relay3":"null","relay4":"null","relay5":"null","relay6":"null","relay7":"null","relay8":"null"}'
+  answ = answ.replace("off", "0")
+  answ = answ.replace("on", "1")
+  answ = answ.replace("null", "x")
+  rly1 = answ[11:12]
+  rly1 = rly1.replace("0", "-idle-")
+  rly1 = rly1.replace("1", "ACTIVAT")
+  rly1 = rly1.replace("x", "N/A")
+  rly2 = answ[24:25]
+  rly2 = rly2.replace("0", "-idle-")
+  rly2 = rly2.replace("1", "ACTIVAT")
+  rly2 = rly2.replace("x", "N/A")
+  rly3 = answ[37:38]
+  rly3 = rly3.replace("0", "-idle-")
+  rly3 = rly3.replace("1", "ACTIVAT")
+  rly3 = rly3.replace("x", "N/A")
+  rly4 = answ[50:51]
+  rly4 = rly4.replace("0", "-idle-")
+  rly4 = rly4.replace("1", "ACTIVAT")
+  rly4 = rly4.replace("x", "N/A")
+  rly5 = answ[63:64]
+  rly5 = rly5.replace("0", "-idle-")
+  rly5 = rly5.replace("1", "ACTIVAT")
+  rly5 = rly5.replace("x", "N/A")
+  rly6 = answ[76:77]
+  rly6 = rly6.replace("0", "-idle-")
+  rly6 = rly6.replace("1", "ACTIVAT")
+  rly6 = rly6.replace("x", "N/A")
+  rly7 = answ[89:90]
+  rly7 = rly7.replace("0", "-idle-")
+  rly7 = rly7.replace("1", "ACTIVAT")
+  rly7 = rly7.replace("x", "N/A")
+  rly8 = answ[102:103]
+  rly8 = rly8.replace("0", "-idle-")
+  rly8 = rly8.replace("1", "ACTIVAT")
+  rly8 = rly8.replace("x", "N/A")
+
+  #print in1, in2, in3, in4, in5, in6, in7, in8, out1, out2, out3, out4, out5, out6, out7, out8, rly1, rly2, rly3, rly4, rly5, rly6, rly7, rly8
+  #send_sms("*******  STATUS  *******\r====================\rSENZORI:\r====================\r  IN#1: %s\r  IN#2: %s\r  IN#3: %s\r  IN#4: %s\r  IN#5: %s\r  IN#6: %s\r  IN#7: %s\r  IN#8: %s\r====================\rEXECUTIE1:\r====================\r  OUT#1: %s\r  OUT#2: %s\r  OUT#3: %s\r  OUT#4: %s\r  OUT#5: %s\r  OUT#6: %s\r  OUT#7: %s\r  OUT#8: %s\r====================\rEXECUTIE2:\r====================\r  RLY#1: %s\r  RLY#2: %s\r  RLY#3: %s\r  RLY#4: %s\r  RLY#5: %s\r  RLY#6: %s\r  RLY#7: %s\r  RLY#8: %s\r====================\r" % (in1, in2, in3, in4, in5, in6, in7, in8, out1, out2, out3, out4, out5, out6, out7, out8, rly1, rly2, rly3, rly4, rly5, rly6, rly7, rly8) )
+
+  #--------------------------------------------------------------------------------------------------------------------------------------------------
+  # split loooong sms message string
+  #--------------------------------------------------------------------------------------------------------------------------------------------------
+
+  msg_str = "*******  STATUS  *******\r====================\rSENZORI:\r====================\r  "
+  msg_str += "IN#1: %s\r  IN#2: %s\r  IN#3: %s\r  IN#4: %s\r  IN#5: %s\r  IN#6: %s\r  IN#7: %s\r  IN#8: %s\r" % (in1, in2, in3, in4, in5, in6, in7, in8)
+  msg_str += "====================\rEXECUTIE1:\r====================\r  "
+  msg_str += "OUT#1: %s\r  OUT#2: %s\r  OUT#3: %s\r  OUT#4: %s\r  OUT#5: %s\r  OUT#6: %s\r  OUT#7: %s\r  OUT#8: %s\r" % (out1, out2, out3, out4, out5, out6, out7, out8)
+  msg_str += "====================\rEXECUTIE2:\r====================\r  "
+  msg_str += "RLY#1: %s\r  RLY#2: %s\r  RLY#3: %s\r  RLY#4: %s\r  RLY#5: %s\r  RLY#6: %s\r  RLY#7: %s\r  RLY#8: %s\r" % (rly1, rly2, rly3, rly4, rly5, rly6, rly7, rly8)
+  msg_str += "====================\r"
+
+  send_sms(msg_str)
+
+
+def warns(color, txt):
+  msg = "/bin/echo -e \"\\033[%sm%s\\033[00m\" | tee $(ls /dev/pts/ | grep -v \"ptmx\" | awk '{print \"/dev/pts/\"$1}') > /dev/null" % (color, txt)
+  os.system(msg)
+
+
+def netage():
+  age=os.popen("sudo stat -c %y /run/network/ifstate").read().strip()
+  split_age=age.split(".")[0]
+  return split_age
+
+
+def network():
+  warns("33", "\n\n  >>> Network interface is restarted by SMS <<<\n")
+  time.sleep(1)
+  warns("33", "  >>> ...please wait... <<<\n")
+  time.sleep(1)
+  #os.system("sudo nohup sh -c \"ifdown eth0 && ifup eth0\"")
+  os.system("sudo ifdown eth0 && sleep 1 && sudo ifup eth0")
+  time.sleep(1)
+  warns("33", "\n\n  >>> Network interface is up now <<<\n")
+  time.sleep(1)
+  warns("33", "  >>> continue your work <<<\n")
+  netup = netage()
+  time.sleep(1)
+  ip=os.popen("dig +short myip.opendns.com @resolver1.opendns.com").read().strip()
+  send_sms("UP: %s\rWANIP: %s" % (netup, ip) )
+
+
+def restart():
+  warns("33", "\n\n  >>> SMS command received! <<<")
+  time.sleep(3)
+  warns("31", "  >>> Restarting in 1 minute! Save your work, NOW! <<<\r")
+  time.sleep(5)
+  send_sms("WARNING!\rSystem will be restarted!")
+  time.sleep(5)
+  os.system("/sbin/shutdown -r +1")
+
+
+def stop():
+  warns("33", "\n\n  >>> SMS command received! <<<")
+  time.sleep(3)
+  warns("31", "  >>> Shutdown in 3 minute! Save your work, NOW! <<<\n")
+  time.sleep(3)
+  send_sms("WARNING!\rSystem will turn off in 3 minutes!")
+  time.sleep(5)
+  os.system("/sbin/shutdown -h +3")
+
+
+def internet():
+  warns("33", "\n\n  >>> GPRS link activated by SMS! <<<\n\n")
+  print "internet - sending sms"
+  send_sms("WARNING!\rGPRS link activated\rNO SMS commands avalaible")
+  # wait until send_sms is done and continue to next statement
+  print "internet - starting gprs"
+  os.system("nohup sleep 20 && /usr/local/bin/gprs & >/dev/null 2>&1")
+
+
+def emonhub_stop():
+  warns("33", "\n\n  >>> emonhub stoped by SMS! <<<\n\n")
+  time.sleep(2)
+  send_sms("WARNING!\remonhub service stopped!")
+  os.system("systemctl stop emonhub.service")
+
+
+def emonhub_start():
+  warns("33", "\n\n  >>> emonhub started by SMS! <<<\n\n")
+  time.sleep(2)
+  send_sms("WARNING!\remonhub service started!")
+  os.system("systemctl start emonhub.service")
+
+
+def unrecognised():
+  send_sms("Received unrecognized SMS command.\rCheck and try again.")
+
+
+#def power():
+  #some code
+
+
+
+
+#-------------------#
+#       MAIN        #
+#-------------------#
+
+
+# preserve space by removing large (> 10KB) gammu.log file
+#-----------------------------------------------------------
+check_log()
+
+#------------------------------------------------------------------------------------------------------
+# the filename of the SMS is passed as argument to the script from the RunOnReceive gammu-smsd option 
+#------------------------------------------------------------------------------------------------------
+if len(sys.argv) > 1:
+  filename=str(sys.argv[1])
+  # exclude black list numbers
+  check_nr()
+  complete_filename="/home/pi/data/shared/gsm/inbox/"+filename
+  #sms_file=open(complete_filename,"r")
+  with open(complete_filename, "r") as sms_file:
+    #----------------------------------------------------
+    # a not-parted SMS can contain maximum 160 characters
+    #----------------------------------------------------
+    message=sms_file.read(160)
+    #--------------------------------------------
+    # recognised commands (VERY DANGEROUS WAY !!)
+    #--------------------------------------------
+    split_msg = message.split("===>")
+    if len(split_msg) > 1 and split_msg[0] == "CMD":
+      display(">>> " + "RUN NOW" + " <<<", split_msg[1])
+      report()
+      send_sms("Acknowledge.\rThe following command will be executed:\r>>> %s <<<\r" % (split_msg[1]))
+      #os.system("nohup sleep 20 && split_msg[1] & >/dev/null 2>&1")
+      os.system("sleep 20 && split_msg[1]")
+    else:
+      #--------------------
+      # predefined commands
+      #--------------------
+      """
+      # 1st mode >> "find" is not the correct approach because "find" is equivalent with "containing"
+      #----------------------------------------------------------------------------------------------
+      if message.find("statuS") != -1:
+        display("*** " + message + " ***", "                ")
+        status()
+      elif message.find("netRestart") != -1:
+        display("*** " + message + " ***", "                ")
+        network()
+      elif message.find("inTernet") != -1:
+        display("*** " + message + " ***", "only GPRS link!")
+        internet()
+      elif message.find("huBstop") != -1:
+        display("*** " + message + " ***", "                ")
+        emonhub_stop()
+      elif message.find("huBstart") != -1:
+        display("*** " + message + " ***", "                ")
+        emonhub_start()
+      elif message.find("reStarting") != -1:
+        display("*** " + message + " ***", "1 minute delay")
+        report()
+        restart()
+      elif message.find("SToP NoW") != -1:
+        display("*** " + message + " ***", "3 minutes delay")
+        report()
+        stop()
+      #elif message.find("power") != -1:
+        #power()
+      else:
+        display("*** " + message + " ***", "...unrecognised!")
+        report()
+        unrecognised()
+
+      # 2nd mode >> "in" is not the correct approach because "in" is equivalent with "containing"
+      #------------------------------------------------------------------------------------------
+      if "statuS" in message:
+        display("*** " + message + " ***", "                ")
+        status()
+      elif "netRestart" in message:
+        display("*** " + message + " ***", "                ")
+        network()
+      elif "inTernet" in message:
+        display("*** " + message + " ***", "only GPRS link!")
+        internet()
+      elif "huBstop" in message:
+        display("*** " + message + " ***", "                ")
+        emonhub_stop()
+      elif "huBstart" in message:
+        display("*** " + message + " ***", "                ")
+        emonhub_start()
+      elif "reStarting" in message:
+        display("*** " + message + " ***", "1 minute delay")
+        report()
+        restart()
+      elif "SToP NoW" in message:
+        display("*** " + message + " ***", "3 minutes delay")
+        report()
+        stop()
+      #elif "power" in message:
+        #power()
+      else:
+        display("*** " + message + " ***", "...unrecognised!")
+        report()
+        unrecognised()
+      """
+      # 3rd mode >> "==" is the correct approach because "=="  is equivalent with "identical"
+      #--------------------------------------------------------------------------------------
+      if message == "statuS":
+        display("*** " + message + " ***", "                ")
+        status()
+      elif message == "netRestart":
+        display("*** " + message + " ***", "                ")
+        network()
+      elif message == "inTernet" :
+        display("*** " + message + " ***", "only GPRS link!")
+        internet()
+      elif message == "huBstop":
+        display("*** " + message + " ***", "                ")
+        emonhub_stop()
+      elif message == "huBstart":
+        display("*** " + message + " ***", "                ")
+        emonhub_start()
+      elif message == "reStarting":
+        display("*** " + message + " ***", "1 minute delay")
+        report()
+        restart()
+      elif message == "SToP NoW":
+        display("*** " + message + " ***", "3 minutes delay")
+        report()
+        stop()
+      #elif message == "power":
+        #power()
+      else:
+        display("*** " + message + " ***", "...unrecognised!")
+        report()
+        unrecognised()
+
+

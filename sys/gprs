@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+/bin/systemctl stop gammu-smsd.service
+wait
+/bin/sleep 1
+/usr/bin/pon modem
+wait
+/usr/bin/touch /var/www/TMPFS/GSM/PPP
+/bin/sleep 1
+
+
+<<"COMMENT"
+/bin/systemctl stop gammu-smsd.service &&
+/bin/sleep 1 &&
+/usr/bin/pon modem &&
+/usr/bin/touch /var/www/TMPFS/GSM/PPP &&
+/bin/sleep 1
+COMMENT

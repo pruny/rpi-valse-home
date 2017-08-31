@@ -1,0 +1,6 @@
+#!/usr/bin/php
+
+
+<?php
+     system ( "wakeonlan 00:13:20:c7:72:76" );
+?>

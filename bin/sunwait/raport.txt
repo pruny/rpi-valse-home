@@ -1,0 +1,38 @@
+########################   RO   ####################################
+
+Utilizand locatia:			44.444636N, 26.092671E
+Data:					30 Mar 2016 
+Ora locala:				12:23 
+Lungimea zilei:                 	12:47 ore
+  utilizand crepuscul terestru		13:42 ore
+  utilizand crepuscul maritim		14:52 ore
+  utilizand crepuscul astronomic	16:05 ore
+Durata crepuscul:   terestru		0:27 hours
+		    maritim		1:02 hours
+		    astronomic		1:39 hours
+Fus orar: EEST (3 from UTC) 
+Soarele traverseaza meridianul (AMIAZA) la ora	1319 EEST
+
+Soarele rasare la ora 0657 EEST, apune la ora 1941 EEST
+Durata crepuscul: terestru	incepe 0628 EEST, sfarseste 2011 EEST
+		  maritim	incepe 0553 EEST, sfarseste 2045 EEST
+		  astronomic	incepe 0517 EEST, sfarseste 2122 EEST
+
+###################################################################
+
+Using location:             44.444636N, 26.092671E
+Date:                       30 Mar 2016 
+Local time:                 12:24 
+Day length:                 12:47 hours
+With civil twilight         13:42 hours
+With nautical twilight      14:52 hours
+With astronomical twilight  16:05 hours
+Length of twilight:  civil   0:27 hours
+                  nautical   1:02 hours
+              astronomical   1:39 hours
+Current specified time zone: EEST (3 from UTC) 
+Sun transits meridian 1319 EEST
+                   Sun rises 0657 EEST, sets 1941 EEST
+       Civil twilight starts 0628 EEST, ends 2011 EEST
+    Nautical twilight starts 0553 EEST, ends 2045 EEST
+Astronomical twilight starts 0517 EEST, ends 2122 EEST

@@ -1,0 +1,10 @@
+
+run script @ boot
+=================
+update-rc.d my_script.sh defaults
+
+
+
+remove script @ the startup sequence
+====================================
+update-rc.d -f  my_script.sh remove

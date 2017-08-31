@@ -1,0 +1,126 @@
+#!/bin/bash
+
+INCOLOUR="#FF0000"
+OUTCOLOUR="#0000FF"
+TRENDCOLOUR="#000000"
+
+############################
+#
+# Parameters to adjust
+#
+############################
+
+# location (my home) valse
+LAT="45.1722867N"
+LON="24.7955867E"
+
+# graph folder (volatile, in RAM)
+DIR="/var/www/files/data/TMPFS/PNG/"
+mkdir -p $DIR
+
+# sensor labels
+G1="ROOM"
+G2="HALL"
+G3="OUTSIDE"
+G4="BASEMENT"
+G5="COLD_WATER"
+G6="WARM_WATER"
+
+# colored lines graph
+L1="#00FF00"
+L2="#00C957"
+L3="#0000FF"
+L4="#FFA500"
+L5="#00EEEE"
+L6="#FF0000"
+LX="#000000"
+
+# colored areas graph
+A1="#98FF98"
+A2="#A0D2B6"
+A3="#B8B8FF"
+A4="#FFF4DE"
+A5="#C7EEEE"
+A6="#E8ADAA"
+AX="#B6B6B4"
+
+
+# rrdgraph options
+Hall="-A --y-grid 1:5 --right-axis 1:0 --start -3h --full-size-mode -w 955 -h 350"
+Dall="-A --y-grid 1:5 --right-axis 1:0 --start -30h --full-size-mode -w 955 -h 350"
+Wall="-A --y-grid 1:5 --right-axis 1:0 --start -9d --full-size-mode -w 955 -h 350"
+Mall="-A --y-grid 1:5 --right-axis 1:0 --start -35d --full-size-mode -w 955 -h 350"
+Yall="-A --y-grid 1:5 --right-axis 1:0 --start -400d --full-size-mode -w 955 -h 350"
+H="--alt-autoscale --y-grid 0.1:10 --start -3h --full-size-mode --width 315 --height 150"
+D="--alt-autoscale --y-grid 0.1:10 --start -30h --full-size-mode --width 315 --height 150"
+W="--alt-autoscale --y-grid 0.1:10 --start -9d --full-size-mode --width 315 --height 150"
+M="--alt-autoscale --y-grid 0.1:10 --start -35d --full-size-mode --width 315 --height 150"
+Y="--alt-autoscale --y-grid 0.1:10 --start -400d --full-size-mode --width 315 --height 150"
+
+# Calculating Civil Twilight based on location from LAT LON (amurg si zori de zi)
+DUSKHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | cut -c 46-47`
+DUSKMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | cut -c 48-49`
+DAWNHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | cut -c 30-31`
+DAWNMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | cut -c 32-33`
+
+# Calculating sunset/sunrise based on location from LAT LON (apusul si rasaritul) 
+SUNRISEHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | cut -c 30-31`
+SUNRISEMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | cut -c 32-33`
+SUNSETHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | cut -c 46-47`
+SUNSETMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | cut -c 48-49`
+
+# Converting to seconds
+RASARIT=$(($SUNRISEHR * 3600 + $SUNRISEMIN * 60))
+APUS=$(($SUNSETHR * 3600 + $SUNSETMIN * 60))
+AMURG=$(($DUSKHR * 3600 + $DUSKMIN * 60))
+ZORI=$(($DAWNHR * 3600 + $DAWNMIN * 60))
+
+############################
+#
+# plot graphs for 6 sensors
+# graph set up is optimal
+# for 960 x 540 display
+# aka Samsung Galaxy S4 mini
+#
+############################
+
+############################
+#
+# Creating graphs
+#
+############################
+
+############ day ###########
+# LE 30h/average=1h -> OK
+# GE 30h/average=1h -> notOK (se pierd zorile/galben !!!)
+#
+# CULOARE			PERIOADA	VARIABILA
+#------------------------------------------------------------		
+# ROSU		#FF0000		APUS->AMURG	amurg	
+# ALBASTRU	#0000FF		NOAPTE->ora24	prima_parte
+# VERDE		#00FF00		ora00->NOAPTE	a_doua_parte
+# GALBEN	#FFCC00		ZORI->RASARIT	zori
+############################	
+
+rrdtool graph ${DIR}T1w.png \
+${Dall} \
+--title "IN CASA" \
+DEF:T1temp=Temp.rrd:T1:AVERAGE \
+CDEF:T1trend=T1temp,3600,TREND \
+CDEF:amurg=86400,LTIME,%,$RASARIT,LT,INF,LTIME,86400,%,$APUS,GT,INF,UNKN,T1temp,*,IF,IF \
+CDEF:prima_parte=86400,LTIME,%,$ZORI,LT,INF,LTIME,86400,%,$AMURG,GT,INF,UNKN,T1temp,*,IF,IF \
+CDEF:a_doua_parte=LTIME,86400,%,$ZORI,GT,NEGINF,LTIME,86400,%,$AMURG,LT,INF,UNKN,T1temp,*,IF,IF \
+CDEF:zori=LTIME,86400,%,$RASARIT,GT,NEGINF,LTIME,86400,%,$APUS,LT,INF,UNKN,T1temp,*,IF,IF \
+AREA:amurg#FF0000 \
+AREA:prima_parte#0000FF \
+AREA:zori#FFCC00 \
+AREA:a_doua_parte#00FF00 \
+AREA:T1temp$A1:"   "${G1}" @ Hourly AVERAGE   " \
+LINE:T1temp$L1 \
+GPRINT:T1temp:MIN:"\t\tmin\: %2.2lf °C\t" \
+GPRINT:T1temp:MAX:"max\: %2.2lf °C\t" \
+GPRINT:T1temp:AVERAGE:"avg\: %2.2lf °C\t\t\t" \
+GPRINT:T1temp:LAST:"cur\: %2.2lf °C\n" \
+HRULE:20#0066FF:"   too cold\n" \
+HRULE:25#FF0000:"   too hot"
+

@@ -1,0 +1,40 @@
+# se ataseaza monitor si tastatura la rpi si dupa ce rpi booteaza prima oara, se fac modificarile dorite in raspi.config.
+
+# trebuie reboot pentru a se incarca modificarile facute.
+
+# apoi se modifica parametrii de retea : /etc/network/interfaces (adrese) si /etc/resolv.conf (dns) - vezi setarile salvate in fisierele de bkp.
+
+	[in noul OS parametrii de retea se modifica DOAR in /etc/dhcpcd.conf]
+	[la finalul fisierului se adauga parametrii de retea necesari pentru IP fix:
+	>>>	# Static IP
+		interface eth0
+		static ip_address=192.168.1.111/24
+		static routers=192.168.1.1
+		static domain_name_servers=192.168.1.1	<<<]
+
+# optional se poate seta parola de root
+
+	[in noul OS se modifica fisierul /etc/ssh/sshd.conf pentru a permite log-inul ca root cu parola ]
+	[la paragraful	# Authentication: >>>	PermitRootLogin without-password	<<< se inlocuieste cu >>>	PermitRootLogin yes	<<<]
+
+# dupa aceasta, se poate lucra in ssh, fara monitor atasat.
+
+# se updateaza / upgradeaza sistemul: apt-get update / apt-get upgrade
+
+# daca se doreste ca sistemul sa ruleze de pe un stick usb (mai fiabil ca microSD card) se executa pasii din https://www.raspberrypi.org/forums/viewtopic.php?f=29&t=44177
+
+# se instaleaza aplicatiile necesare: apt-get install ***
+
+	ex: ssmtp heirloom-mailx (utilitar mail), pv (cursor monitorizare date), bc (utilitar aritmetic), ntfs-3g (utilitar NTFS file system),
+	    apache2 php5 libapache2-mod-php5 (server web), rrdtool (baza date RRD), wiringPi (utilitar GPIO, etc), watchdog chkconfig (watchdog),
+	    python-smbus (utilitar smbus si i2c) sau doar i2c-tools (doar utilitar i2c), wakeonlan (utilitar wol in reteaua privata)
+	    gdisk (utilitar disc), rsync (daca nu este deja prezent in sistem - in versiunea jessie-lite nu este)
+
+	[de exemplu, pentru a se instala server web apache impreuna cu php si utilitar sqlite, fara a mai confirma prin "yes" la fiecare pas,
+	se foloseste comanda "apt-get -y install apache2 php5 libapache2-mod-php5 php5-apcu php5-curl sqlite3 php5-sqlite3"]
+
+# se monteaza driverele necesare (la sistemele mai vechi, linuxul 8 le incarca automat): modprobe ***
+
+	ex: wire, w1gpio, w1-therm (drivere 1 wire), bcm2708_wdog (hw-watchdog), i2c-dev (i2c devices), rtc-ds1307 (hw-rtc),
+
+# se seteaza cheile publice (/root/.ssh/id_rsa.pub de la rPi-1 in /root/.ssh/authorized_keys in rPi-2 si viceversa) pentru conectare ssh fara parola intre cele 2 rPi

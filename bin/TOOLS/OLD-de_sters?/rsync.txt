@@ -1,0 +1,18 @@
+
+##########
+update car_wash din eLePHanT# in eLePHanT#1:
+
+rsync -avh /home/elephant/bin/car_wash -e 'ssh -p 2020' root@<IP>:/home/elephant/bin
+  or
+rsync -avh /home/elephant/bin/car_wash -e 'ssh -p 2020' root@ear.bacau.kantarmedia.ro:/home/elephant/bin
+
+##########
+update www din eLePHanT# in eLePHanT#1:
+
+rsync -avh /var/www -e 'ssh -p 2020' root@<IP>:/var
+  or
+rsync -avh /var/www -e 'ssh -p 2020' root@ear.bacau.kantarmedia.ro:/var
+
+
+rsync -avh /root/TOOLS/rsync.txt -e 'ssh' root@192.168.1.110:/root
+

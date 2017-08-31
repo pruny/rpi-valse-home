@@ -1,0 +1,550 @@
+.collection-item {
+  font-size: 20px;
+
+}
+
+#configs_time_data_result > div > table > tbody > tr > td.config_options_td:hover  {
+  background-color: initial;
+}
+
+.config_status {
+  box-shadow: none;
+  cursor: default;
+}
+
+.config_status:hover {
+  box-shadow: none;
+  cursor: default;
+}
+
+.status_icon_div {
+  display: block;
+  width: 35px;
+  height: 35px;
+  position: relative;
+  cursor: default;
+  border-radius: 7px;
+
+/*
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%)
+  */
+}
+
+.status_icon {
+  color: white;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%)
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+                                  not supported by any browser */
+}
+
+
+.fixed-action-btn.horizontal ul {
+  width: initial;
+}
+
+#create_config_time_btn {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+}
+
+
+
+#loading_svg {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#clockpicker_div {
+  display: none;
+}
+
+#configs_time_data_result > div > table > tbody > tr > td:hover {
+  /*background-color: #dddddd;*/
+  background-color: rgba(84, 187, 224, 0.1);
+}
+
+
+.btn:hover {
+  color: #fff;
+}
+
+.btn:visited {
+  color: #fff;
+}
+
+#toast-container {
+  /*
+  top: initial;
+  bottom: 0;
+  right: 0;
+  */
+  top: initial;
+  bottom: 0;
+
+
+}
+
+
+.remodal {
+  min-height: 620px;
+}
+
+#configs_time_data_title {
+  text-align: center;
+  text-align: -webkit-center;
+}
+
+#configs_content > div > #configs_list > a:hover {
+  background-color: rgba(84, 187, 224, 0.1);
+}
+
+#configs_content > div > #configs_list > a.active  {
+  background-color: #0288d1;
+}
+
+#configs_content > div > #configs_list > a.active > i  {
+  background-color: #fff;
+  padding: 3px;
+  margin-top: -3px;
+}
+
+.driver_disabled_icon {
+  position: absolute;
+  z-index: 10;
+  bottom: 0;
+  right: 0;
+  padding: 5px;
+  cursor: default;
+}
+
+#module_id {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+#modal2_back {
+  float: left;
+}
+
+#modal2 {
+  max-width: 400px;
+  height: 700px;
+}
+
+#modal3 {
+  max-width: 400px;
+  height: 700px;
+}
+
+.hidden {
+  display: none;
+}
+
+.collection a.collection-item {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  color: #0288d1;
+}
+
+
+.rs-range-color {
+  background-color: #ff9800;
+}
+
+.rs-tooltip-text {
+  font-family: "Roboto", sans-serif;
+  font-size: 30px;
+  margin-top: -28.5px !important;
+}
+
+.card {
+  text-align: center;
+  text-align: -o-center;
+  text-align: -moz-center;
+  text-align: -webkit-center
+}
+
+.pagination {
+  float: left;
+  margin: 0;
+}
+
+.card:hover {
+  background-color: rgba(84, 187, 224, 0.1);
+}
+
+.rs-bar .rs-seperator {
+  display: none;
+}
+
+
+.rs-tooltip .rs-input {
+  font-size: 30px;
+  border: none !important;
+  outline: 0 none !important;
+}
+
+@media only screen and (min-width: 993px) {
+
+  .card {
+    text-align: center;
+    text-align: -o-center;
+    text-align: -moz-center;
+    text-align: -webkit-center
+  }
+}
+
+nav {
+  margin-bottom: 30px;
+}
+
+nav .brand-logo {
+  padding-left: 20px;
+}
+
+.modal .modal-content {
+  text-align: -webkit-center;
+}
+
+
+.rs-tooltip.hover, .rs-tooltip.edit:hover {
+  border: none;
+  box-shadow: none;
+}
+
+.rs-tooltip.hover input {
+  /*border: none;*/
+  padding-top: 29px;
+  padding-left: 0px;
+}
+
+#change_values {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+span.step {
+  background: #607d8b;
+  border-radius: 0.8em;
+  -moz-border-radius: 0.8em;
+  -webkit-border-radius: 0.8em;
+  color: #ffffff;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1.6em;
+  margin-right: 0px;
+  text-align: center;
+  width: 1.6em;
+  margin-left: 7px;
+}
+
+span.step2 {
+  color: #ffffff;
+  position: absolute;
+  top: 3px;
+  right: 1px;
+  background: #607d8b;
+  border-radius: 0.8em;
+  -moz-border-radius: 0.8em;
+  -webkit-border-radius: 0.8em;
+  display: inline-block;
+  line-height: 1.6em;
+  width: 1.6em;
+  text-align: center;
+}
+
+.slider-container {
+  position: relative;
+  top: 20px;
+}
+
+.pie_progress {
+  width: 120px;
+  height: 120px;
+}
+
+/*
+@media (max-width: 1170px) and (min-width: 993px) {
+  .pie_progress {
+    width: 120px;
+    height: 120px;
+  }
+}
+*/
+
+.notindb .pie_progress__number {
+  color: #cecece;
+}
+
+.notindb .card-title {
+  color: #cecece;
+}
+
+/*
+.notindb > .card-content > .pie_progress > .pie_progress__number {
+  display: none;
+}
+*/
+
+.pie_progress__number {
+  font-size: 30px;
+  color: #0288d1;
+}
+
+.container {
+  margin-top: 15px;
+}
+
+.card_selected > .card-content > .pie_progress > .pie_progress__svg > svg > path {
+  /*stroke: #26a69a;*/
+  stroke: #ff9800;
+}
+
+.card_selected > .card-content > .pie_progress > .pie_progress__number {
+  /*color:  #26a69a;*/
+  color: #ff9800;
+}
+
+
+.card_selected {
+  /*
+  box-shadow: 0 8px 17px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  -webkit-transition: all 0.8s ease;
+  -moz-transition: all 0.8s ease;
+  -o-transition: all 0.8s ease;
+  transition: all 0.8s ease;
+  */
+
+  /*outline: 1px solid #ff9800;*/
+}
+
+
+
+.card_selected::before,
+.card_selected::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-color: transparent;
+    border-style: solid;
+
+}
+
+.card_selected::before {
+    border-width: 1.5em;
+    border-left-color: #ccc;
+    border-top-color: #ccc;
+}
+
+.card_selected::after {
+    border-radius: 0.4em;
+    border-width: 1.35em;
+
+    border-left-color: #26a69a;
+    border-top-color: #26a69a;
+
+    border-left-color: #ff9800;
+    border-top-color: #ff9800;
+}
+
+
+
+.collapsible {
+  box-shadow: none;
+  margin-top: 15px;
+}
+
+.collapsible-body {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.card .card-title {
+  font-weight: 350;
+}
+
+.modal {
+  overflow: hidden;
+}
+
+/* Mobile CSS */
+@media only screen and (max-width: 993px) {
+
+  .material-tooltip {
+    display: none !important;
+  }
+
+
+  .driver_disabled_icon {
+    position: absolute;
+    z-index: 10;
+    bottom: 20;
+    right: initial;
+    left: 120px;
+    padding: 5px;
+  }
+
+  #modal2 {
+    max-width: 100%;
+  }
+
+  #modal3 {
+    max-width: 100%;
+  }
+
+  .collection a.collection-item {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .remodal-wrapper {
+    padding: 0;
+  }
+
+  .remodal {
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0;
+    min-height: 100%;
+    max-height: 100%;
+    overflow: hidden !important;
+    top: 0% !important;
+    max-height: 100% !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-shadow: none;
+    left:0;
+    right: 0;
+  }
+
+  .remodal .remodal_footer {
+    border-top: 1px solid rgba(0,0,0,0.1);
+    position: absolute;
+    bottom: 0;
+    border-radius: 0 0 2px 2px;
+    background-color: #fafafa;
+    padding: 4px 6px;
+    width: 100%;
+    height: 56px;
+
+  }
+
+  .card {
+    text-align: -webkit-center;
+    padding: 10px;
+    margin: 0;
+    background-color: initial;
+    border-radius: initial;
+    border-bottom: 1px #e0e0e0;
+    border-bottom-style: solid;
+    box-shadow: initial;
+    text-align: right;
+  }
+
+  .pie_progress {
+    width: 60px;
+    height: 60px;
+  }
+
+  .pie_progress__number {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .card-title {
+    display: inline-block;
+    float:left;
+    padding-top: 11px;
+  }
+
+  .card .card-content {
+    display: inline-block;
+    padding: 0;
+  }
+
+  .card_selected {
+    /*
+    background-color: #0288d1;
+    color: #ffffff;
+    */
+    font-weight: 400;
+    box-shadow: none;
+    -webkit-transition: none;
+    -moz-transition: none;
+    -o-transition: none;
+    transition: none;
+  }
+
+  .card_selected > .card-content > .pie_progress > .pie_progress__svg > svg > path {
+    stroke: #ff9800;
+  }
+
+  .card_selected > .card-content > .pie_progress > .pie_progress__number {
+    /*color: #ffffff;*/
+    color: #ff9800;
+  }
+
+  .card_selected > .card-title {
+    color: #ff9800;
+    /*font-weight: 400;*/
+  }
+
+  .card_selected::before,
+  .card_selected::after {
+    display: none;
+  }
+
+  .card_selected::before {
+    display: none;
+  }
+
+  .card_selected::after {
+    display: none;
+  }
+
+  .card:hover  {
+    background-color: rgba(255, 255, 255, 0);
+  }
+
+  /*
+  .card_selected:hover {
+    background-color: #0288d1;
+    color: #ffffff;
+  }
+  */
+
+.open {
+    top: 0% !important;
+    max-height: 100% !important;
+    height: 100% !important;
+    width: 100%;
+    box-shadow: none;
+  }
+
+}
+
+/* /Mobile CSS */

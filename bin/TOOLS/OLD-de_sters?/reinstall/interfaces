@@ -1,0 +1,33 @@
+# The loopback interface
+auto lo
+iface lo inet loopback
+
+# My LAN
+auto eth0
+iface eth0 inet static
+	#address 10.142.0.110
+	address 10.178.0.110
+	netmask 255.255.255.0
+	#gateway 10.142.0.1
+	gateway 10.178.0.1
+	#network 10.178.0.0
+	#broadcast 10.178.0.255
+	dns-nameservers 10.142.0.1 10.178.0.1 8.8.8.8 8.8.4.4
+
+allow-hotplug wlan0
+
+# My WLAN
+auto wlan0
+iface wlan0 inet static
+	#address 10.142.0.111
+	address 10.178.0.111
+	netmask 255.255.255.0
+	#gateway 10.142.0.1
+	#gateway 10.178.0.1
+	#network 10.178.0.0
+	#broadcast 10.178.0.255
+	dns nameservers 10.142.0.1 10.178.0.1 8.8.8.8 8.8.4.4
+
+	#wpa-ssid "UPC-HOME"
+	#wpa-psk "j1XVn5hdfdbo"
+	wireless-essid VALSE#178
