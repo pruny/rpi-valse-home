@@ -28,13 +28,13 @@ if(not os.path.isdir(gammu_dir)):
 
 # RLY-8 values
 #-------------
-ip = "192.168.1.123"	### " " because is a string
+ip = "192.168.1.123"				### " " because is a string
 port = 2000
 buffer = 128
 
 # black list numbers
 #-------------------
-blklst = ["+40742293455", "+40733331237"]
+blklst = ["+40742293455", "+40733331237"]	### [] list of numbers separated by comma
 
 # manager's phone number
 #-----------------------
@@ -42,7 +42,7 @@ svnr = "+40733331236"
 
 # lcd i2c address
 #----------------
-i2c = 0x3f		### is a number (hex)
+i2c = 0x3f					### is a number (hex)
 
 # gpio setup
 #-----------
@@ -378,6 +378,15 @@ def emonhub_start():
   os.system("systemctl start emonhub.service")
 
 
+def atmega():
+  warns("33", "\n\n  >>> atmega restart by SMS! <<<\n\n")
+  time.sleep(2)
+  send_sms("WARNING!\ratmega restarted by SMS!")
+  os.system("/home/pi/emonpi/atmega_rst.py")
+  time.sleep(5)
+  os.system("systemctl restart emonPiLCD.service")
+
+
 def unrecognised():
   send_sms("Received unrecognized SMS command.\rCheck and try again.")
 
@@ -507,6 +516,9 @@ if len(sys.argv) > 1:
       elif message == "huBstart":
         display("*** " + message + " ***", "                ")
         emonhub_start()
+      elif message == "aTmeGa":
+        display("*** " + message + " ***", "                ")
+        atmega()
       elif message == "reStarting":
         display("*** " + message + " ***", "1 minute delay")
         report()
