@@ -1,0 +1,89 @@
+// OpenEnergyMonitor Skeleton Config
+// For use on emonPi running emonhub MQTT
+// Part of the openenergymonitor.org project
+
+// https://github.com/openhab/openhab/wiki/Explanation-of-Sitemaps
+// Updated 24.10.2017
+
+sitemap default label="Home Automation"
+{
+
+  Frame label="ESP Easy on LAN" {
+    Text label="Wireless#1" icon="wifi"{
+      Frame label="ESP Easy status" {
+        Text item=UP icon="fire-on"
+        Text item=RSSI icon="antenna"
+        Text item=VCC icon="energy"
+        Text item=IP1 icon="settings"
+      }
+
+      Frame label="ESP Easy Relay (unsecure - NO feedback)" {
+        Switch item=sw10     label="All SW"           mappings=[OFF="All Off", ON="All On"]
+        Switch item=sw11     label="SW1-D4 (onboard LED)"
+        Switch item=sw12     label="SW2-D5"
+        Switch item=sw13     label="SW3-D6"
+        Switch item=sw14     label="SW4-D7"
+      }
+    }
+  }
+
+  Frame label="ESP Easy on WEB" {
+    Text label="Wireless#2" icon="wifi"{
+      Frame label="ESP Easy status" {
+        Text item=UPTIME icon="fire-on"
+        Text item=SEMNAL icon="antenna"
+        Text item=BAT icon="energy"
+        Text item=IP2 icon="settings"
+      }
+
+      Frame label="ESP Easy Relay (unsecure - NO feedback)" {
+        Switch item=sw20     label="All SW"           mappings=[OFF="All Off", ON="All On"]
+        Switch item=sw21     label="SW1-D4 (onboard LED)"
+        Switch item=sw22     label="SW2-D5"
+        Switch item=sw23     label="SW3-D6"
+        Switch item=sw24     label="SW4-D7"
+      }
+    }
+  }
+
+  Frame label="RLY-8 (wired)" {
+    Text label="Wired sockets" icon="socket"{
+      Frame label="RLY-8 controller"{
+        Switch item=rly_all  label="All RLY8"           mappings=[OFF="All Off", ON="All On"]
+        Switch item=rly1     label="RLY#1"
+        Switch item=rly2     label="RLY#2"
+        Switch item=rly3     label="RLY#3"
+        Switch item=rly4     label="RLY#4"
+        Switch item=rly5     label="RLY#5"
+        Switch item=rly6     label="RLY#6"
+        Switch item=rly7     label="RLY#7"
+        Switch item=rly8     label="RLY#8"
+      }
+    }
+  }
+
+
+  Frame label="Energy Monitor" {
+    Text label="Open Energy Monitor" icon="info"{
+      Frame label="emonPi" {
+        Text item=emonpi_ct1 icon="groundfloor"
+        Text item=emonpi_ct2 icon="firstfloor"
+        Text item=emonpi_vrms icon="energy"
+        Text item=emonpi_t1 icon="temperature"
+        Text item=emonpi_t2 icon="temperature"
+      }
+
+      Frame label="emonTH (node 19)" {
+        Text item=emonth_t19 icon="temperature"
+        Text item=emonth_h19 icon="rain"
+      }
+	
+      Frame label="emonTH (node 23)" {
+        Text item=emonth_t23  icon="temperature"
+        Text item=emonth_h23  icon="rain"
+      }
+    }
+  }
+
+}
+

@@ -1,0 +1,47 @@
+//rules
+// Updated 24.10.2017
+/*
+rule "Switch all LWRF sockets"
+when
+    Item lwrf_all received command
+then
+    lwrf0.sendCommand(receivedCommand)
+    lwrf1.sendCommand(receivedCommand)
+    lwrf2.sendCommand(receivedCommand)
+    lwrf3.sendCommand(receivedCommand)
+    lwrf4.sendCommand(receivedCommand)
+end
+*/
+rule "Switch all RLY8 sockets"
+when
+    Item rly_all received command
+then
+    rly1.sendCommand(receivedCommand)
+    rly2.sendCommand(receivedCommand)
+    rly3.sendCommand(receivedCommand)
+    rly4.sendCommand(receivedCommand)
+    rly5.sendCommand(receivedCommand)
+    rly6.sendCommand(receivedCommand)
+    rly7.sendCommand(receivedCommand)
+    rly8.sendCommand(receivedCommand)
+end
+
+rule "Switch all SW sockets"
+when
+    Item sw10 received command
+then
+    sw11.sendCommand(receivedCommand)
+    sw12.sendCommand(receivedCommand)
+    sw13.sendCommand(receivedCommand)
+    sw14.sendCommand(receivedCommand)
+end
+
+rule "Switch all SW sockets"
+when
+    Item sw20 received command
+then
+    sw21.sendCommand(receivedCommand)
+    sw22.sendCommand(receivedCommand)
+    sw23.sendCommand(receivedCommand)
+    sw24.sendCommand(receivedCommand)
+end
