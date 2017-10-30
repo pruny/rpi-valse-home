@@ -1,6 +1,9 @@
 #!/bin/bash
 
 
+#/usr/local/bin/sms 0733331236 "WARNING"'!'"\rGPRS link activated\rNO SMS commands avalaible"
+#wait
+#/bin/sleep 1
 /bin/systemctl stop gammu-smsd.service
 wait
 /bin/sleep 1

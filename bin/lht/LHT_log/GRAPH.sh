@@ -108,12 +108,15 @@ COMMENT
 # location (my home) valse
 LAT="45.1722867N"
 LON="24.7955867E"
-
-# Calculating Civil Twilight based on location from LAT LON (amurg si zori de zi tinand cont de ora de vara EEST:UTC+3 sau de iarna EET:UTC+2)
+################################################################################################## DAWN / DUSK ########################################################################################
+# Calculating Civil Twilight (crepuscular), based on location from LAT LON (zori de zi si amurg tinand cont de ora de vara EEST:UTC+3 sau de iarna EET:UTC+2)
 DAWNHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | cut -c 30-31`
 DAWNMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | cut -c 32-33`
-DUSKHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | if [ -e EEST ] ; then cut -c 48-49; else cut -c 46-47; fi`
-DUSKMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | if [ -e EEST ] ; then cut -c 50-51; else cut -c 48-49; fi`
+#DUSKHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | if [ -e EEST ] ; then cut -c 48-49; else cut -c 46-47; fi`
+#DUSKMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | if [ -e EEST ] ; then cut -c 50-51; else cut -c 48-49; fi`
+
+DUSKHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | if [ -e EET ] ; then cut -c 45-46; else cut -c 46-47; fi`
+DUSKMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | if [ -e EET ] ; then cut -c 47-48; else cut -c 48-49; fi`
 
 # winter time
 #DUSKHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | cut -c 45-46`
@@ -122,12 +125,17 @@ DUSKMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/
 # summer time
 #DUSKHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | cut -c 46-47`
 #DUSKMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun rises/{:a;n;/Nautical twilight/b;p;ba}' | cut -c 48-49`
+#######################################################################################################################################################################################################
 
-# Calculating sunset/sunrise based on location from LAT LON (apusul si rasaritul tinand cont de ora de vara EEST:UTC+3 sau de iarna EET:UTC+2) 
+################################################################################################ SUNRISE / SUNSET #####################################################################################
+# Calculating Civil Daylight (sunrise to sunset), based on location from LAT LON (rasaritul si apusul tinand cont de ora de vara EEST:UTC+3 sau de iarna EET:UTC+2) 
 SUNRISEHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | cut -c 30-31`
 SUNRISEMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | cut -c 32-33`
-SUNSETHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | if [ -e EEST ] ; then cut -c 48-49; else cut -c 46-47; fi`
-SUNSETMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | if [ -e EEST ] ; then cut -c 50-51; else cut -c 48-49; fi`
+#SUNSETHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | if [ -e EEST ] ; then cut -c 48-49; else cut -c 46-47; fi`
+#SUNSETMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | if [ -e EEST ] ; then cut -c 50-51; else cut -c 48-49; fi`
+
+SUNSETHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | if [ -e EET ] ; then cut -c 45-46; else cut -c 46-47; fi`
+SUNSETMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | if [ -e EET ] ; then cut -c 47-48; else cut -c 48-49; fi`
 
 # winter time
 #SUNSETHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | cut -c 45-46`
@@ -136,6 +144,7 @@ SUNSETMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:
 # summer time
 #SUNSETHR=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | cut -c 46-47`
 #SUNSETMIN=`/usr/local/bin/sunwait sun up $LAT $LON -p | sed -n '/Sun transits/{:a;n;/Civil twilight/b;p;ba}' | cut -c 48-49`
+#######################################################################################################################################################################################################
 
 # Converting to seconds (format text as decimal numbers & calculate...)
 SUNR=$((10#$SUNRISEHR * 3600 + 10#$SUNRISEMIN * 60))

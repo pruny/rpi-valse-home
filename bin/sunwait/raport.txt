@@ -1,3 +1,21 @@
+###################################################################
+
+usage:
+
+###
+
+/usr/local/bin/sunwait sun up 44.4446359N 26.0926713E -p -y 2016 -m 04 -d 25	#yesterday
+
+###
+
+/usr/local/bin/sunwait sun up 44.4446359N 26.0926713E -p
+		or								# today (26/04/2016)
+/usr/local/bin/sunwait sun up 44.4446359N 26.0926713E -p -y 2016 -m 04 -d 26
+
+###
+
+/usr/local/bin/sunwait sun up 44.4446359N 26.0926713E -p -y 2016 -m 04 -d 27	# tomorrow
+
 ########################   RO   ####################################
 
 Utilizand locatia:			44.444636N, 26.092671E
@@ -36,3 +54,21 @@ Sun transits meridian 1319 EEST
        Civil twilight starts 0628 EEST, ends 2011 EEST
     Nautical twilight starts 0553 EEST, ends 2045 EEST
 Astronomical twilight starts 0517 EEST, ends 2122 EEST
+###################################################################
+
+Using location:             44.444636N, 26.092671E
+Date:                       30 Oct 2017 
+Local time:                 10:01 
+Day length:                 10:17 hours
+With civil twilight         11:15 hours
+With nautical twilight      12:23 hours
+With astronomical twilight  13:31 hours
+Length of twilight:  civil   0:28 hours
+                  nautical   1:02 hours
+              astronomical   1:36 hours
+Current specified time zone: EET (2 from UTC) 
+Sun transits meridian 1159 EET
+                   Sun rises 0651 EET, sets 1706 EET
+       Civil twilight starts 0621 EET, ends 1736 EET
+    Nautical twilight starts 0547 EET, ends 1811 EET
+Astronomical twilight starts 0513 EET, ends 1844 EET

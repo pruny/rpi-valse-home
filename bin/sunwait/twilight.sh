@@ -22,7 +22,7 @@ azi=`date --date="today" +"%d/%m/%Y"`	# sau asa: `date +"%d/%m/%Y"`
 maine=`date --date="tomorrow" +"%d/%m/%Y"`
 
 # path to log file
-RAMDIR="/var/www/files/data/TMPFS"
+RAMDIR="/var/www/TMPFS"
 LOGFILE="$RAMDIR/sunwait.log"
 
 # path to app

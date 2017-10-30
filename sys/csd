@@ -7,7 +7,11 @@ wait
 /bin/rm /var/www/TMPFS/GSM/PPP
 /bin/sleep 1
 /bin/systemctl start gammu-smsd.service
+wait
 /bin/sleep 1
+#/usr/local/bin/sms 0733331236 "WARNING"'!'"\rGPRS link is stopped\rSMS commands avalaible"
+#wait
+#/bin/sleep 1
 
 
 <<"COMMENT"
