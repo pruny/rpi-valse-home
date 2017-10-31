@@ -70,9 +70,10 @@ Switch rly8   "RLY Socket 4"  {mqtt=">[mosquitto:rly:command:ON:8 1],>[mosquitto
 
 /* ESPEasy#1 on LAN */
 Number  RSSI     "RSSI [%d dBm]"       {mqtt="<[mosquitto:emon/espeasy_1/RSSI/rssi:state:default]"}
-Number  VCC      "Vcc [%.2f V]"        {mqtt="<[mosquitto:emon/espeasy_1/Vcc/vcc:state:default]"}
-Number  UP       "Uptime [%.2f days]"  {mqtt="<[mosquitto:emon/espeasy_1/UP/up:state:default]"}
-String  IP1      "IP address [%s]"     {mqtt="<[mosquitto:emon/espeasy_1/ip:state:default]"}
+Number  VCC      "Vcc [%.2f V]"        {mqtt="<[mosquitto:emon/espeasy_1/VCC/vcc:state:default]"}
+Number  UP       "Uptime [%.2f days]"  {mqtt="<[mosquitto:emon/espeasy_1/UPTIME/uptime:state:default]"}
+String  IP1      "IP address [%s]"     {mqtt="<[mosquitto:emon/espeasy_1/IP/ip:state:default]"}
+String  TIME     "Time [%s]"           {mqtt="<[mosquitto:emon/espeasy_1/TIME/time:state:default]"}
 
 Switch sw10  "All sw"
 Switch sw11    {mqtt=">[mosquitto:emon/espeasy_1/gpio/2:command:ON:0],>[mosquitto:emon/espeasy_1/gpio/2:command:OFF:1]"}

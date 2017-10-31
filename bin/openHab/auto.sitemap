@@ -15,6 +15,7 @@ sitemap default label="Home Automation"
         Text item=RSSI icon="antenna"
         Text item=VCC icon="energy"
         Text item=IP1 icon="settings"
+        Text item=TIME icon="clock-on"
       }
 
       Frame label="ESP Easy Relay (unsecure - NO feedback)" {
