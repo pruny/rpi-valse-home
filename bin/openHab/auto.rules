@@ -12,6 +12,8 @@ then
     lwrf4.sendCommand(receivedCommand)
 end
 */
+
+
 rule "Switch all RLY8 sockets"
 when
     Item rly_all received command
@@ -26,9 +28,10 @@ then
     rly8.sendCommand(receivedCommand)
 end
 
-rule "Switch all SW sockets"
+
+rule "Switch all esp1 sockets"
 when
-    Item sw10 received command
+    Item sw1_all received command
 then
     sw11.sendCommand(receivedCommand)
     sw12.sendCommand(receivedCommand)
@@ -36,9 +39,10 @@ then
     sw14.sendCommand(receivedCommand)
 end
 
-rule "Switch all SW sockets"
+
+rule "Switch all esp2 sockets"
 when
-    Item sw20 received command
+    Item sw2_all received command
 then
     sw21.sendCommand(receivedCommand)
     sw22.sendCommand(receivedCommand)

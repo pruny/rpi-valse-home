@@ -11,32 +11,12 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// IF USING OLD EMONHUB node only CSV MQTT structure with multi CSV per topic basetopic/rx/10/values
-// See https://github.com/openenergymonitor/emonhub/blob/emon-pi/configuration.md
-
-/* emonPi */
-//Number  emonpi_ct1       "Power 1 [%d W]"    { mqtt="<[mosquitto:emonhub/rx/5/values:state:REGEX((.*),.*,.*,.*,.*,.*,.*,.*,.*,.*,.*)]" }
-//Number  emonpi_ct2       "Power 2 [%d W]"       { mqtt="<[mosquitto:emonhub/rx/5/values:state:REGEX(.*,(.*),.*,.*,.*,.*,.*,.*,.*,.*,.*)]" }
-// Number  emonpi_ct1plus2  "Power 1 +2 [%d W]"    { mqtt="<[mosquitto:emonhub/rx/5/values:state:REGEX(.*,.*,(.*),.*,.*,.*,.*,.*,.*,.*,.*)]" }
-//Number  emonpi_vrms      "Voltage [%.1f VRMS]"    { mqtt="<[mosquitto:emonhub/rx/5/values:state:REGEX(.*,.*,.*,(.*),.*,.*,.*,.*,.*,.*,.*)]" }
-//Number  emonpi_t1        "Temperature 1 [%.1f°C]" { mqtt="<[mosquitto:emonhub/rx/5/values:state:REGEX(.*,.*,.*,.*,(.*),.*,.*,.*,.*,.*,.*)]" }
-//Number  emonpi_t2        "Temperature 2 [%.1f°C]" { mqtt="<[mosquitto:emonhub/rx/5/values:state:REGEX(.*,.*,.*,.*,.*,(.*),.*,.*,.*,.*,.*)]" }
-
-/* emonTH */
-//Number  emonth_t19       "Temperature [%.1f°C]" { mqtt="<[mosquitto:emonhub/rx/19/values:state:REGEX((.*),.*,.*,.*)]" }
-//Number  emonth_h19       "Humidity [%.1f RH]"      { mqtt="<[mosquitto:emonhub/rx/19/values:state:REGEX(.*,.*,(.*),.*)]" }
-//Number  emonth_t23       "Temperature [%.1f°C]" { mqtt="<[mosquitto:emonhub/rx/23/values:state:REGEX((.*),.*,.*,.*,.*)]" }
-//Number  emonth_h23       "Humidity [%.1f RH]"      { mqtt="<[mosquitto:emonhub/rx/23/values:state:REGEX(.*,.*,(.*),.*,.*)]" }
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 // IF USING NEW EMONHUB node variable topic structure with singe value per topic 
 // See https://github.com/openenergymonitor/emonhub/blob/emon-pi/configuration.md
 // https://github.com/openenergymonitor/emonhub/blob/emon-pi/conf/emonpi.default.emonhub.conf
 
 /* emonPi */
+//===================================================================================================================================================
 Number  emonpi_ct1      "Power 1 [%d W]"    { mqtt="<[mosquitto:emon/emonpi/power1:state:default]" }
 Number  emonpi_ct2      "Power 2 [%d W]"    { mqtt="<[mosquitto:emon/emonpi/power2:state:default]" }
 Number  emonpi_vrms     "Voltage [%.1f VRMS]"    { mqtt="<[mosquitto:emon/emonpi/vrms:state:default]" }
@@ -44,12 +24,14 @@ Number  emonpi_t1       "Temperature 1 [%.1f°C]"    { mqtt="<[mosquitto:emon/em
 Number  emonpi_t2       "Temperature 2 [%.1f°C]"    { mqtt="<[mosquitto:emon/emonpi/t2:state:default]" }
 
 /* emonTH */
+//===================================================================================================================================================
 Number  emonth_t19       "Temperature [%.1f°C]" { mqtt="<[mosquitto:emon/emonth1/temperature:state:default]" }
 Number  emonth_h19       "Humidity [%.1f RH]"   { mqtt="<[mosquitto:emon/emonth1/humidity:state:default]" }
 Number  emonth_t23       "Temperature [%.1f°C]" { mqtt="<[mosquitto:emon/emonth5/temperature:state:default]" }
 Number  emonth_h23       "Humidity [%.1f RH]"   { mqtt="<[mosquitto:emon/emonth5/humidity:state:default]" }
 
 /* LWRF Devices */
+//===================================================================================================================================================
 Switch lwrf_all "All LWRF"
 Switch lwrf0   "LWRF Socket 0"  {mqtt=">[mosquitto:lwrf:command:ON:0 1],>[mosquitto:lwrf:command:OFF:0 0]"}
 Switch lwrf1   "LWRF Socket 1"  {mqtt=">[mosquitto:lwrf:command:ON:1 1],>[mosquitto:lwrf:command:OFF:1 0]"}
@@ -57,38 +39,59 @@ Switch lwrf2   "LWRF Socket 2"  {mqtt=">[mosquitto:lwrf:command:ON:2 1],>[mosqui
 Switch lwrf3   "LWRF Socket 3"  {mqtt=">[mosquitto:lwrf:command:ON:3 1],>[mosquitto:lwrf:command:OFF:3 0]"}
 Switch lwrf4   "LWRF Socket 4"  {mqtt=">[mosquitto:lwrf:command:ON:4 1],>[mosquitto:lwrf:command:OFF:4 0]"}
 
-/* RLY8 Devices *//*json*/
-Switch rly_all "All RLY8"
-Switch rly1   "RLY Socket 1"  {mqtt=">[mosquitto:rly:command:ON:1 1],>[mosquitto:rly:command:OFF:1 0]"}	//{"relay1":"on"}, {"relay1":"off"}
-Switch rly2   "RLY Socket 2"  {mqtt=">[mosquitto:rly:command:ON:2 1],>[mosquitto:rly:command:OFF:2 0]"}	//{"relay2":"on"}, {"relay2":"off"}
-Switch rly3   "RLY Socket 3"  {mqtt=">[mosquitto:rly:command:ON:3 1],>[mosquitto:rly:command:OFF:3 0]"}	//{"relay3":"on"}, {"relay3":"off"}
-Switch rly4   "RLY Socket 4"  {mqtt=">[mosquitto:rly:command:ON:4 1],>[mosquitto:rly:command:OFF:4 0]"}	//{"relay4":"on"}, {"relay4":"off"}
-Switch rly5   "RLY Socket 1"  {mqtt=">[mosquitto:rly:command:ON:5 1],>[mosquitto:rly:command:OFF:5 0]"}	//{"relay5":"on"}, {"relay5":"off"}
-Switch rly6   "RLY Socket 2"  {mqtt=">[mosquitto:rly:command:ON:6 1],>[mosquitto:rly:command:OFF:6 0]"}	//{"relay6":"on"}, {"relay6":"off"}
-Switch rly7   "RLY Socket 3"  {mqtt=">[mosquitto:rly:command:ON:7 1],>[mosquitto:rly:command:OFF:7 0]"}	//{"relay7":"on"}, {"relay7":"off"}
-Switch rly8   "RLY Socket 4"  {mqtt=">[mosquitto:rly:command:ON:8 1],>[mosquitto:rly:command:OFF:8 0]"}	//{"relay8":"on"}, {"relay8":"off"}
+
+//===================================================================================================================================================
+//===================================================================================================================================================
+
+
 
 /* ESPEasy#1 on LAN */
+//===================================================================================================================================================
 Number  RSSI     "RSSI [%d dBm]"       {mqtt="<[mosquitto:emon/espeasy_1/RSSI/rssi:state:default]"}
-Number  VCC      "Vcc [%.2f V]"        {mqtt="<[mosquitto:emon/espeasy_1/VCC/vcc:state:default]"}
+Number  VCC      "Vcc [%.2f V]"        {mqtt="<[mosquitto:emon/espeasy_1/VCC/adc:state:default]"}
 Number  UP       "Uptime [%.2f days]"  {mqtt="<[mosquitto:emon/espeasy_1/UPTIME/uptime:state:default]"}
 String  IP1      "IP address [%s]"     {mqtt="<[mosquitto:emon/espeasy_1/IP/ip:state:default]"}
-String  TIME     "Time [%s]"           {mqtt="<[mosquitto:emon/espeasy_1/TIME/time:state:default]"}
+String  TIME1    "Time [%s]"           {mqtt="<[mosquitto:emon/espeasy_1/TIME/time:state:default]"}
+String  DATE1   "Date [%s]"            {mqtt="<[mosquitto:emon/espeasy_1/DATE/date:state:default]"}
+Number  VCC1       "Vcc [%.2f V]"      {mqtt="<[mosquitto:emon/espeasy_1/VCC/vcc:state:default]"}
 
-Switch sw10  "All sw"
+Switch sw1_all  "All SW"
+Switch sw11    {mqtt=">[mosquitto:emon/espeasy_1/gpio/2:command:ON:0],>[mosquitto:emon/espeasy_1/gpio/2:command:OFF:1],<[mosquitto:emon/espeasy_1/gpio/2:state:MAP(binary_inverted.map)]", autoupdate="false"}
+Switch sw12    {mqtt=">[mosquitto:emon/espeasy_1/gpio/14:command:ON:1],>[mosquitto:emon/espeasy_1/gpio/14:command:OFF:0],<[mosquitto:emon/espeasy_1/gpio/14:state:MAP(binary.map)]", autoupdate="false"}
+Switch sw13    {mqtt=">[mosquitto:emon/espeasy_1/gpio/12:command:ON:1],>[mosquitto:emon/espeasy_1/gpio/12:command:OFF:0],<[mosquitto:emon/espeasy_1/gpio/12:state:MAP(binary.map)]", autoupdate="false"}
+Switch sw14    {mqtt=">[mosquitto:emon/espeasy_1/gpio/13:command:ON:1],>[mosquitto:emon/espeasy_1/gpio/13:command:OFF:0],<[mosquitto:emon/espeasy_1/gpio/13:state:MAP(binary.map)]", autoupdate="false"}/*
 Switch sw11    {mqtt=">[mosquitto:emon/espeasy_1/gpio/2:command:ON:0],>[mosquitto:emon/espeasy_1/gpio/2:command:OFF:1]"}
 Switch sw12    {mqtt=">[mosquitto:emon/espeasy_1/gpio/14:command:ON:1],>[mosquitto:emon/espeasy_1/gpio/14:command:OFF:0]"}
 Switch sw13    {mqtt=">[mosquitto:emon/espeasy_1/gpio/12:command:ON:1],>[mosquitto:emon/espeasy_1/gpio/12:command:OFF:0]"}
-Switch sw14    {mqtt=">[mosquitto:emon/espeasy_1/gpio/13:command:ON:1],>[mosquitto:emon/espeasy_1/gpio/13:command:OFF:0]"}
+Switch sw14    {mqtt=">[mosquitto:emon/espeasy_1/gpio/13:command:ON:1],>[mosquitto:emon/espeasy_1/gpio/13:command:OFF:0]"}*/
+
 
 /* ESPEasy#2 on WEB */
+//===================================================================================================================================================
 Number  SEMNAL   "RSSI [%d dBm]"       {mqtt="<[mosquitto:emon/espeasy_2/SEMNAL/dBm:state:default]"}
-Number  BAT      "Vcc [%.2f V]"        {mqtt="<[mosquitto:emon/espeasy_2/BAT/vcc:state:default]"}
+Number  BAT      "Vcc [%.2f V]"        {mqtt="<[mosquitto:emon/espeasy_2/BAT/adc:state:default]"}
 Number  UPTIME   "Uptime [%.2f hours]" {mqtt="<[mosquitto:emon/espeasy_2/UPTIME/up:state:default]"}
-String  IP2      "IP address [%s]"     {mqtt="<[mosquitto:emon/espeasy_2/IP:state:default]"}
+String  IP2      "IP address [%s]"     {mqtt="<[mosquitto:emon/espeasy_2/IP/ip:state:default]"}
+String  TIME2    "Time [%s]"           {mqtt="<[mosquitto:emon/espeasy_2/TIME/time:state:default]"}
+String  DATE2    "Date [%s]"           {mqtt="<[mosquitto:emon/espeasy_2/DATE/date:state:default]"}
+Number  VCC2      "Vcc [%.2f V]"       {mqtt="<[mosquitto:emon/espeasy_2/VCC/vcc:state:default]"}
 
-Switch sw20  "All sw"
-Switch sw21    {mqtt=">[mosquitto:emon/espeasy_2/gpio/2:command:ON:0],>[mosquitto:emon/espeasy_2/gpio/2:command:OFF:1]"}
-Switch sw22    {mqtt=">[mosquitto:emon/espeasy_2/gpio/14:command:ON:1],>[mosquitto:emon/espeasy_2/gpio/14:command:OFF:0]"}
-Switch sw23    {mqtt=">[mosquitto:emon/espeasy_2/gpio/12:command:ON:1],>[mosquitto:emon/espeasy_2/gpio/12:command:OFF:0]"}
-Switch sw24    {mqtt=">[mosquitto:emon/espeasy_2/gpio/13:command:ON:1],>[mosquitto:emon/espeasy_2/gpio/13:command:OFF:0]"}
+// https://community.openhab.org/t/openhab-mqtt-inbound-and-outbound/7300/11 view post#2 from watou (John Cocula) ===> add item feedback ?!
+Switch sw2_all  "All SW"
+Switch sw21    {mqtt=">[mosquitto:emon/espeasy_2/gpio/2:command:ON:0],>[mosquitto:emon/espeasy_2/gpio/2:command:OFF:1],<[mosquitto:emon/espeasy_2/gpio/2:state:MAP(binary_inverted.map)]", autoupdate="false"}
+Switch sw22    {mqtt=">[mosquitto:emon/espeasy_2/gpio/14:command:ON:1],>[mosquitto:emon/espeasy_2/gpio/14:command:OFF:0],<[mosquitto:emon/espeasy_2/gpio/14:state:MAP(binary.map)]", autoupdate="false"}
+Switch sw23    {mqtt=">[mosquitto:emon/espeasy_2/gpio/12:command:ON:1],>[mosquitto:emon/espeasy_2/gpio/12:command:OFF:0],<[mosquitto:emon/espeasy_2/gpio/12:state:MAP(binary.map)]", autoupdate="false"}
+Switch sw24    {mqtt=">[mosquitto:emon/espeasy_2/gpio/13:command:ON:1],>[mosquitto:emon/espeasy_2/gpio/13:command:OFF:0],<[mosquitto:emon/espeasy_2/gpio/13:state:MAP(binary.map)]", autoupdate="false"}
+
+
+/* RLY8 Devices command with json string (ascii char)*/
+//===================================================================================================================================================
+Switch rly_all  "All RLY8"
+Switch rly1     "RLY#1"    {tcp=">[ON:192.168.1.123:2000:MAP(rly1.map)], >[OFF:192.168.1.123:2000:MAP(rly1.map)]"}
+Switch rly2     "RLY#2"    {tcp=">[ON:192.168.1.123:2000:MAP(rly2.map)], >[OFF:192.168.1.123:2000:MAP(rly2.map)]"}
+Switch rly3     "RLY#3"    {tcp=">[ON:192.168.1.123:2000:MAP(rly3.map)], >[OFF:192.168.1.123:2000:MAP(rly3.map)]"}
+Switch rly4     "RLY#4"    {tcp=">[ON:192.168.1.123:2000:MAP(rly4.map)], >[OFF:192.168.1.123:2000:MAP(rly4.map)]"}
+Switch rly5     "RLY#5"    {tcp=">[ON:192.168.1.123:2000:MAP(rly5.map)], >[OFF:192.168.1.123:2000:MAP(rly5.map)]"}
+Switch rly6     "RLY#6"    {tcp=">[ON:192.168.1.123:2000:MAP(rly6.map)], >[OFF:192.168.1.123:2000:MAP(rly6.map)]"}
+Switch rly7     "RLY#7"    {tcp=">[ON:192.168.1.123:2000:MAP(rly7.map)], >[OFF:192.168.1.123:2000:MAP(rly7.map)]"}
+Switch rly8     "RLY#8"    {tcp=">[ON:192.168.1.123:2000:MAP(rly8.map)], >[OFF:192.168.1.123:2000:MAP(rly8.map)]"}

@@ -14,12 +14,14 @@ sitemap default label="Home Automation"
         Text item=UP icon="fire-on"
         Text item=RSSI icon="antenna"
         Text item=VCC icon="energy"
+        Text item=VCC1 icon="battery-power"
         Text item=IP1 icon="settings"
-        Text item=TIME icon="clock-on"
+        Text item=TIME1 icon="clock-on"
+        Text item=DATE1 icon="calendar"
       }
 
-      Frame label="ESP Easy Relay (unsecure - NO feedback)" {
-        Switch item=sw10     label="All SW"           mappings=[OFF="All Off", ON="All On"]
+      Frame label="ESP Easy Relay" {
+        Switch item=sw1_all  label="All SW"           mappings=[OFF="All Off", ON="All On"]
         Switch item=sw11     label="SW1-D4 (onboard LED)"
         Switch item=sw12     label="SW2-D5"
         Switch item=sw13     label="SW3-D6"
@@ -28,17 +30,20 @@ sitemap default label="Home Automation"
     }
   }
 
-  Frame label="ESP Easy on WEB" {
+  Frame label="ESP Easy on WEB (unsafe - too many disconnections)" {
     Text label="Wireless#2" icon="wifi"{
       Frame label="ESP Easy status" {
         Text item=UPTIME icon="fire-on"
         Text item=SEMNAL icon="antenna"
-        Text item=BAT icon="energy"
+        Text item=BAT icon="battery"
+        Text item=VCC2 icon="battery-power"
         Text item=IP2 icon="settings"
+        Text item=TIME2 icon="clock-on"
+        Text item=DATE2 icon="calendar"
       }
 
-      Frame label="ESP Easy Relay (unsecure - NO feedback)" {
-        Switch item=sw20     label="All SW"           mappings=[OFF="All Off", ON="All On"]
+      Frame label="ESP Easy Relay" {
+        Switch item=sw2_all  label="All SW"           mappings=[OFF="All Off", ON="All On"]
         Switch item=sw21     label="SW1-D4 (onboard LED)"
         Switch item=sw22     label="SW2-D5"
         Switch item=sw23     label="SW3-D6"
