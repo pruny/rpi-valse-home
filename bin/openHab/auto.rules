@@ -1,5 +1,5 @@
 //rules
-// Updated 24.10.2017
+// Updated 3.11.2017
 /*
 rule "Switch all LWRF sockets"
 when
